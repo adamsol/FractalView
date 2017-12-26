@@ -30,7 +30,8 @@
 			uniform vec3 cameraPos;
 			uniform vec3 cameraDir;
 
-			const int MAX_STEPS = 50;
+			const int MAX_STEPS = 100;
+			const int NUM_ITERATIONS = 15;
 
 			vec3 hsv2rgb(float x, float y, float z)
 			{
@@ -77,12 +78,68 @@
 				return Intersection(a, Complement(b));
 			}
 
+			Distance Mandelbulb(vec3 p)
+			{
+				const int n = NUM_ITERATIONS;
+				vec3 z = vec3(0.0);
+				vec3 d = vec3(1.0);
+				float r = 0.0;
+				float k = 6.0;
+				float b = 10000.0;
+
+				for (int i = 0; i < n; ++i)
+				{
+					d = k * pow(r, k-1.0) * d + 1.0;
+					if (r > 0.0) {
+						float phi = atan(z.z, z.x);
+						phi *= k;
+						float theta = acos(z.y/r);
+						theta *= k;
+						r = pow(r, k);
+						z = vec3(cos(phi) * cos(theta), sin(theta), sin(phi) * cos(theta)) * r;
+					}
+					z += p;
+					r = length(z);
+					b = min(r, b);
+					if (r >= 2.0)
+						break;
+				}
+				return Distance(r * log(r) * 0.5 / length(d), hsv2rgb(vec3(b*1.3+0.3, 0.7, 0.9)));
+			}
+
+			Distance Juliabulb(vec3 p)
+			{
+				const int n = NUM_ITERATIONS;
+				vec3 z = p;
+				vec3 c = vec3(0.3, -0.9, -0.2);
+				vec3 d = vec3(1.0);
+				float r = 0.0;
+				float k = 3.0;
+				float b = 10000.0;
+
+				for (int i = 0; i < n; ++i)
+				{
+					d = k * pow(r, k-1.0) * d + 1.0;
+					if (r > 0.0) {
+						float phi = atan(z.z, z.x);
+						phi *= k;
+						float theta = acos(z.y/r);
+						theta *= k;
+						r = pow(r, k);
+						z = vec3(cos(phi) * cos(theta), sin(theta), sin(phi) * cos(theta)) * r;
+					}
+					z += c;
+					r = length(z);
+					b = min(r, b);
+					if (r >= 2.0)
+						break;
+				}
+				return Distance(r * log(r) * 0.5 / length(d), hsv2rgb(vec3(-b*1.3-0.5, 0.7, 0.9)));
+			}
+
 			Distance Scene(vec3 p)
 			{
-				return Union(
-					Distance(sphere(p, 1.0), vec3(0.2, 0.5, 0.8)),
-					Distance(sphere(p - vec3(1.0, 1.0, 1.0), 2.0), vec3(0.7, 0.6, 0.2))
-				);
+				return Mandelbulb(p);
 			}
 
 			struct Hit
@@ -95,10 +152,11 @@
 			Hit raymarch(vec3 p, vec3 dir)
 			{
 				Distance dist = Scene(p);
-				float eps = 0.0001 * dist.value;
+				float eps = 0.0004 * dist.value;
 				Hit hit;
 
-				for (int i = 0; i < MAX_STEPS; ++i) {
+				for (int i = 0; i < MAX_STEPS; ++i)
+				{
 					Distance dist = Scene(p);
 					float d = dist.value;
 

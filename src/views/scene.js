@@ -23,11 +23,14 @@ CameraControls.prototype.update = function(dt)
 {
 	if (this.unlocked) {
 		var dist = this.speed.movement * dt;
+		if (this.keys[-18]) { // Alt
+			dist *= 0.01;
+		}
 		if (this.keys[-17]) { // Ctrl
-			dist *= 0.3;
+			dist *= 0.1;
 		}
 		if (this.keys[-16]) { // Shift
-			dist *= 3;
+			dist *= 5;
 		}
 		var axis = new THREE.Vector3();
 
@@ -98,7 +101,7 @@ function SceneView(container, state)
 
 	this.camera = new THREE.PerspectiveCamera(75, 1, 0.01, 1000);
 	this.camera.rotation.order = 'YXZ';
-	this.camera.position.set(0.0, 1.0, 8.0);
+	this.camera.position.set(0.0, 0.0, 3.0);
 
 	this.controls = new CameraControls(this.camera, this.canvas);
 
