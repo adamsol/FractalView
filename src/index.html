@@ -1,0 +1,153 @@
+<html>
+	<head>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js"></script>
+		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.js"></script>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.css">
+
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"/>
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.4/jstree.min.js"></script>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.4/themes/default/style.min.css">
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/golden-layout/1.5.8/goldenlayout.js"></script>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/golden-layout/1.5.8/css/goldenlayout-base.css"/>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/golden-layout/1.5.8/css/goldenlayout-dark-theme.css"/>
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/89/three.js"></script>
+
+		<script src="utils.js"></script>
+
+		<script src="views/scene.js"></script>
+
+		<script type="x-shader/x-fragment" id="fragment_shader">
+			precision highp float;
+
+			uniform vec2 screenRes;
+			uniform vec3 cameraPos;
+			uniform vec3 cameraDir;
+
+			const int MAX_STEPS = 50;
+
+			vec3 hsv2rgb(float x, float y, float z)
+			{
+				vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+				vec3 p = abs(fract(vec3(x) + K.xyz) * 6.0 - K.www);
+				return z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), y);
+			}
+			vec3 hsv2rgb(vec3 c)
+			{
+				return hsv2rgb(c.x, c.y, c.z);
+			}
+
+			float sphere(vec3 p, float r)
+			{
+				return length(p) - r;
+			}
+
+			struct Distance
+			{
+				float value;
+				vec3 color;
+			};
+
+			Distance Union(Distance a, Distance b)
+			{
+				if (a.value < b.value)
+					return a;
+				else
+					return b;
+			}
+			Distance Intersection(Distance a, Distance b)
+			{
+				if (a.value > b.value)
+					return a;
+				else
+					return b;
+			}
+			Distance Complement(Distance a)
+			{
+				return Distance(-a.value, a.color);
+			}
+			Distance Difference(Distance a, Distance b)
+			{
+				return Intersection(a, Complement(b));
+			}
+
+			Distance Scene(vec3 p)
+			{
+				return Union(
+					Distance(sphere(p, 1.0), vec3(0.2, 0.5, 0.8)),
+					Distance(sphere(p - vec3(1.0, 1.0, 1.0), 2.0), vec3(0.7, 0.6, 0.2))
+				);
+			}
+
+			struct Hit
+			{
+				bool is;
+				vec3 pos, normal;
+				vec3 color;
+			};
+
+			Hit raymarch(vec3 p, vec3 dir)
+			{
+				Distance dist = Scene(p);
+				float eps = 0.0001 * dist.value;
+				Hit hit;
+
+				for (int i = 0; i < MAX_STEPS; ++i) {
+					Distance dist = Scene(p);
+					float d = dist.value;
+
+					if (max(d, 0.0) <= eps) {
+						hit.is = true;
+						hit.pos = p;
+						//hit.normal.x = scene(p + vec3(eps, 0.0, 0.0)).value - scene(p - vec3(eps, 0.0, 0.0)).value;
+						//hit.normal.y = scene(p + vec3(0.0, eps, 0.0)).value - scene(p - vec3(0.0, eps, 0.0)).value;
+						//hit.normal.z = scene(p + vec3(0.0, 0.0, eps)).value - scene(p - vec3(0.0, 0.0, eps)).value;
+						//hit.normal = normalize(hit.normal);
+						hit.color = dist.color * (1.0 - float(i) / float(MAX_STEPS));
+						return hit;
+					}
+					p += dir * d;
+				}
+				hit.is = false;
+				hit.color = vec3(0.0);
+				return hit;
+			}
+
+			void main(void)
+			{
+				vec2 p = (gl_FragCoord.xy*2.0 - screenRes) / min(screenRes.x, screenRes.y);
+
+				vec3 cDir = cameraDir;
+				vec3 cSide = normalize(cross(cDir, vec3(0.0, 1.0, 0.0)));
+				vec3 cUp = normalize(cross(cSide, cDir));
+				vec3 rayDir = normalize( cSide * p.x + cUp * p.y + cDir * 1.5);
+
+				Hit hit = raymarch(cameraPos, rayDir);
+
+				gl_FragColor = vec4(hit.color, 1.0);
+			}
+
+		</script>
+
+		<script type="x-shader/x-vertex" id="vertex_shader">
+			attribute vec3 position;
+
+			void main(void)
+			{
+				gl_Position = vec4(position, 1.0);
+			}
+		</script>
+
+		<script src="index.js"></script>
+		<link rel="stylesheet" href="index.css"/>
+	</head>
+
+	<body>
+	</body>
+</html>

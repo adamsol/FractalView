@@ -1,0 +1,10 @@
+
+html, body {
+	background-color: #242629;
+	font-family: Verdana;
+	font-size: 12px;
+	height: 100%;
+	overflow: hidden;
+	padding: 0;
+	margin: 0;
+}
