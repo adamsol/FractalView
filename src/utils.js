@@ -34,11 +34,12 @@ String.prototype.format = function()
 		var attrs = pattern.split('.');
 		attrs[0] = attrs[0] || '0';
 		var obj = args;
+		if (typeof obj[0] == 'object')
+			obj = obj[0];
 		for (var i = 0, n = attrs.length; i < n; ++i) {
 			obj = obj[attrs[i]];
-			if (obj === undefined) {
+			if (obj === undefined)
 				break;
-			}
 		}
 		return (obj !== undefined ? obj : match);
 	});

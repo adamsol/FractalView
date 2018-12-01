@@ -115,17 +115,17 @@ function SceneView(container, state)
 
 SceneView.prototype.animate = function()
 {
-	if (!this.renderer) return;
+	if (mesh && mesh.material && this.renderer) {
 
-	var dt = this.clock.getDelta();
+		var dt = this.clock.getDelta();
+		this.controls.update(dt);
 
-	this.controls.update(dt);
+		mesh.material.uniforms.screenRes.value = new THREE.Vector2(this.canvas.width(), this.canvas.height());
+		mesh.material.uniforms.cameraPos.value = this.camera.getWorldPosition();
+		mesh.material.uniforms.cameraDir.value = this.camera.getWorldDirection();
 
-	material.uniforms.screenRes.value = new THREE.Vector2(this.canvas.width(), this.canvas.height());
-	material.uniforms.cameraPos.value = this.camera.getWorldPosition();
-	material.uniforms.cameraDir.value = this.camera.getWorldDirection();
-
-	this.renderer.render(scene, camera);
+		this.renderer.render(scene, camera);
+	}
 
 	requestAnimationFrame(this.animate.bind(this));
 };

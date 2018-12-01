@@ -1,21 +1,14 @@
 
-var scene, camera, geometry, material, layout;
+var fractals = [
+	'mandelbulb', 'juliabulb', 'menger-sponge', 'sierpinski-tetrahedron', 'sierpinski-octahedron',
+];
+
+var scene, camera, mesh, layout;
 
 $(function()
 {
 	scene = new THREE.Scene();
 	camera = new THREE.Camera();
-	geometry = new THREE.PlaneBufferGeometry(2.0, 2.0);
-	material = new THREE.RawShaderMaterial({
-		uniforms: {
-			screenRes: {},
-			cameraPos: {},
-			cameraDir: {},
-		},
-		vertexShader: $('#vertex_shader').text(),
-		fragmentShader: $('#fragment_shader').text(),
-	});
-	scene.add(new THREE.Mesh(geometry, material));
 
 	var config = {
 		content: [{
@@ -25,6 +18,12 @@ $(function()
 				title: 'Scene',
 				componentName: 'scene',
 				componentState: {},
+			}, {
+				type: 'component',
+				title: 'Inspector',
+				width: 15,
+				componentName: 'inspector',
+				componentState: {},
 			}]
 		}]
 	};
@@ -32,6 +31,7 @@ $(function()
 	layout = new GoldenLayout(config);
 
 	layout.registerComponent('scene', SceneView);
+	layout.registerComponent('inspector', InspectorView);
 
 	layout.init();
 });
