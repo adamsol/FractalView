@@ -15,6 +15,7 @@ function CameraControls(camera, container)
 	container.on('mousedown', this.onMouseDown.bind(this));
 	$(window).on('mouseup', this.onMouseUp.bind(this));
 	$(window).on('mousemove', this.onMouseMove.bind(this));
+	container.on('mousewheel', this.onMouseWheel.bind(this));
 	container.on('keydown', this.onKeyDown.bind(this));
 	container.on('keyup', this.onKeyUp.bind(this));
 }
@@ -23,33 +24,24 @@ CameraControls.prototype.update = function(dt)
 {
 	if (this.unlocked) {
 		var dist = this.speed.movement * dt;
-		if (this.keys[-18]) { // Alt
-			dist *= 0.01;
-		}
-		if (this.keys[-17]) { // Ctrl
-			dist *= 0.1;
-		}
-		if (this.keys[-16]) { // Shift
-			dist *= 5;
-		}
 		var axis = new THREE.Vector3();
 
-		if (this.keys[87]) { // W
+		if (this.keys[Keys.W]) {
 			axis.z -= 1;
 		}
-		if (this.keys[83]) { // S
+		if (this.keys[Keys.S]) {
 			axis.z += 1;
 		}
-		if (this.keys[65]) { // A
+		if (this.keys[Keys.A]) {
 			axis.x -= 1;
 		}
-		if (this.keys[68]) { // D
+		if (this.keys[Keys.D]) {
 			axis.x += 1;
 		}
-		if (this.keys[81]) { // Q
+		if (this.keys[Keys.Q]) {
 			axis.y -= 1;
 		}
-		if (this.keys[69]) { // E
+		if (this.keys[Keys.E]) {
 			axis.y += 1;
 		}
 		this.camera.translateOnAxis(axis.normalize(), dist);
@@ -77,11 +69,18 @@ CameraControls.prototype.onMouseUp = function(event)
 	this.unlocked = false;
 };
 
+CameraControls.prototype.onMouseWheel = function(event)
+{
+	let delta = event.originalEvent.deltaY;
+	if (delta < 0) {
+		this.speed.movement *= 0.8;
+	} else if (delta > 0) {
+		this.speed.movement /= 0.8;
+	}
+};
+
 CameraControls.prototype.onKeyDown = function(event)
 {
-	if (event.keyCode >= 16 && event.keyCode <= 18) { // Shift / Ctrl / Alt - toggle
-		this.keys[-event.keyCode] = !this.keys[-event.keyCode];
-	}
 	this.keys[event.keyCode] = true;
 };
 

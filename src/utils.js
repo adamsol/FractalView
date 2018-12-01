@@ -1,10 +1,16 @@
 
+let Keys = {ENTER: 13, SHIFT: 16, CTRL: 17, ALT: 18};
+for (let c = 65; c <= 90; ++c) {
+	Keys[String.fromCharCode(c)] = c;
+}
+
 Array.prototype.extend = function(arr)
 {
 	arr.forEach(function(el) {
 		this.push(el);
 	}.bind(this));
 };
+
 
 Array.prototype.remove = function(el)
 {
