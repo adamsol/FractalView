@@ -1,13 +1,14 @@
 
+const int NUM_ITERATIONS = 30;
+
 Distance Scene(vec3 p)
 {
-    const int n = NUM_ITERATIONS * 2;
     vec3 z = p;
     float scale = 2.0;
     float b = 10000.0;
     float t = 0.0;
 
-    for (int i = 0; i < n; ++i)
+    for (int i = 0; i < NUM_ITERATIONS; ++i)
     {
         if (z.x + z.y < 0.0) { float x1 = -z.y; z.y = -z.x; z.x = x1; }
         if (z.x + z.z < 0.0) { float x1 = -z.z; z.z = -z.x; z.x = x1; }

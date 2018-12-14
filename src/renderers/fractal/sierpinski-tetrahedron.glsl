@@ -1,13 +1,14 @@
 
+const int NUM_ITERATIONS = 30;
+
 Distance Scene(vec3 p)
 {
-    const int n = NUM_ITERATIONS * 2;
     vec3 z = p;
     float scale = 1.7;
     float b = 10000.0;
     float t = 0.0;
 
-    for (int i = 0; i < n; ++i)
+    for (int i = 0; i < NUM_ITERATIONS; ++i)
     {
         z = rotateZ(z, -15.0);
 

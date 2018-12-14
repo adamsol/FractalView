@@ -1,15 +1,15 @@
 
+const int NUM_ITERATIONS = 15;
+
 Distance Scene(vec3 p)
 {
-    const int n = 15;
-    vec3 z = p;
-    vec3 c = vec3(0.3, -0.9, -0.2);
+    vec3 z = vec3(0.0);
     vec3 d = vec3(1.0);
     float r = 0.0;
-    float k = 3.0;
+    float k = 6.0;
     float b = 10000.0;
 
-    for (int i = 0; i < n; ++i)
+    for (int i = 0; i < NUM_ITERATIONS; ++i)
     {
         d = k * pow(r, k-1.0) * d + 1.0;
         if (r > 0.0) {
@@ -20,11 +20,11 @@ Distance Scene(vec3 p)
             r = pow(r, k);
             z = vec3(cos(phi) * cos(theta), sin(theta), sin(phi) * cos(theta)) * r;
         }
-        z += c;
+        z += p;
         r = length(z);
         b = min(r, b);
         if (r >= 2.0)
             break;
     }
-    return Distance(r * log(r) * 0.5 / length(d), hsv2rgb(vec3(-b*1.3-0.5, 0.7, 0.9)));
+    return Distance(r * log(r) * 0.5 / length(d), hsv2rgb(vec3(b*1.3+0.8, 0.7, 0.9)));
 }

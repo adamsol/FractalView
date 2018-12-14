@@ -1,8 +1,4 @@
 
-var fractals = [
-	'mandelbulb', 'juliabulb', 'menger-sponge', 'sierpinski-tetrahedron', 'sierpinski-octahedron',
-];
-
 var scene, camera, mesh, layout;
 
 $(function()

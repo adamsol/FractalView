@@ -3,12 +3,17 @@ function InspectorView(container, state)
 {
 	this.container = container.getElement().empty();
 
-	var select = $('<select>', {id: 'fractal'}).appendTo(this.container).append($('<option>', {text: '-- select --'}));
-	fractals.forEach(function(name) {
-		$('<option>', {value: name, text: name}).appendTo(select);
+	let select = $('<select>', {id: 'fractal'}).appendTo(this.container).append($('<option>', {text: '-- select --'}));
+	fs.readdir('src/renderers/fractal', (err, files) => {
+		for (let name of files) {
+			$('<option>', {value: name, text: name}).appendTo(select);
+		}
 	});
 	select.on('change', function() {
-		$.get('fractals/{}.glsl'.format($(this).val()), function(glsl) {
+		let vertex = $.get('renderers/base.vert');
+		let fragment = $.get('renderers/base.frag');
+		let fractal = $.get('renderers/fractal/{}'.format($(this).val()));
+		$.when(vertex, fragment, fractal).done(function(vertex, fragment, fractal) {
 			if (mesh) {
 				scene.remove(mesh);
 			}
@@ -20,28 +25,10 @@ function InspectorView(container, state)
 					cameraPos: {},
 					cameraDir: {},
 				},
-				vertexShader: $('#shader_vert').text(),
-				fragmentShader: $('#shader_frag').text().format({code: glsl}),
+				vertexShader: vertex[0],
+				fragmentShader: fragment[0].format({fractal: fractal[0]}),
 			});
 			scene.add(mesh);
 		});
 	});
-
-	var self = this;
-	this.container.on('input change keydown', '.component-value input, .component-value select', function(event) {
-		if (event.type != 'keydown' || event.which == 13) {
-			self.updateValue($(this));
-		}
-	});
 }
-
-InspectorView.prototype.updateValue = function(input) {
-	var attrs = input.attr('data-name').split('.');
-	obj = this.actor.components[input.closest('.component').data('index')];
-	for (var i = 0; i < attrs.length - 1; ++i) {
-		obj = obj[attrs[i]];
-	}
-	var attr = attrs.pop();
-	var value = input.val() || input.data('default');
-	obj[attr] = value;
-};
