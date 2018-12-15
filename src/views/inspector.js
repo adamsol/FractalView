@@ -12,7 +12,7 @@ function InspectorView(container, state)
 	select.on('change', function() {
 		let vertex = $.get('renderers/base.vert');
 		let fragment = $.get('renderers/base.frag');
-		let lighting = $.get('renderers/lighting/lambert.frag');
+		let lighting = $.get('renderers/lighting/lambert-shadow.frag');
 		let fractal = $.get('renderers/fractal/{}'.format($(this).val()));
 		$.when(vertex, fragment, lighting, fractal).done(function(vertex, fragment, lighting, fractal) {
 			if (mesh) {
