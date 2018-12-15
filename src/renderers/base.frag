@@ -5,9 +5,6 @@ uniform vec2 screenRes;
 uniform vec3 cameraPos;
 uniform vec3 cameraDir;
 
-const int MAX_STEPS = 80;
-const float EPS = 0.0004;
-
 vec3 hsv2rgb(float x, float y, float z)
 {
 	vec4 K = vec4(1.0, 2.0/3.0, 1.0/3.0, 3.0);
@@ -79,6 +76,8 @@ Distance Difference(Distance a, Distance b)
 
 // {fractal}
 
+// {lighting}
+
 vec3 raymarch(vec3 p, vec3 dir)
 {
 	Distance dist = Scene(p);
@@ -89,8 +88,8 @@ vec3 raymarch(vec3 p, vec3 dir)
 		Distance dist = Scene(p);
 		float d = dist.value;
 
-		if (max(d, 0.0) <= eps) {
-			return dist.color * (1.0 - float(i) / float(MAX_STEPS));
+		if (d <= eps) {
+			return dist.color * Lighting(i, p, eps);
 		}
 		p += dir * d;
 	}

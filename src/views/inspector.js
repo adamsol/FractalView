@@ -12,8 +12,9 @@ function InspectorView(container, state)
 	select.on('change', function() {
 		let vertex = $.get('renderers/base.vert');
 		let fragment = $.get('renderers/base.frag');
+		let lighting = $.get('renderers/lighting/lambert.frag');
 		let fractal = $.get('renderers/fractal/{}'.format($(this).val()));
-		$.when(vertex, fragment, fractal).done(function(vertex, fragment, fractal) {
+		$.when(vertex, fragment, lighting, fractal).done(function(vertex, fragment, lighting, fractal) {
 			if (mesh) {
 				scene.remove(mesh);
 			}
@@ -26,7 +27,7 @@ function InspectorView(container, state)
 					cameraDir: {},
 				},
 				vertexShader: vertex[0],
-				fragmentShader: fragment[0].format({fractal: fractal[0]}),
+				fragmentShader: fragment[0].format({lighting: lighting[0], fractal: fractal[0]}),
 			});
 			scene.add(mesh);
 		});
