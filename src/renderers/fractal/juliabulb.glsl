@@ -27,5 +27,5 @@ Distance Scene(vec3 p)
         if (r >= 2.0)
             break;
     }
-    return Distance(r * log(r) * 0.5 / length(d), hsv2rgb(vec3(-b*1.3-0.5, 0.7, 0.9)));
+    return Color(r * log(r) * 0.5 / length(d), hsv2rgb(vec3(-b*1.3-0.5, 0.7, 0.9)));
 }

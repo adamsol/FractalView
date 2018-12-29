@@ -1,12 +1,9 @@
 
-var scene, camera, mesh, layout;
+let layout;
 
 $(function()
 {
-	scene = new THREE.Scene();
-	camera = new THREE.Camera();
-
-	var config = {
+	let config = {
 		content: [{
 			type: 'row',
 			content: [{

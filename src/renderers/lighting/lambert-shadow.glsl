@@ -27,13 +27,12 @@ float shadow(vec3 p, vec3 dir)
 	return clamp(m/SHADOW_SOFTNESS, 0.0, 1.0);
 }
 
-vec3 Lighting(int i, vec3 p, float eps)
+vec3 Lighting(int i, vec3 p)
 {
-    vec3 normal;
-    normal.x = Scene(p + vec3(eps, 0.0, 0.0)).value - Scene(p - vec3(eps, 0.0, 0.0)).value;
-    normal.y = Scene(p + vec3(0.0, eps, 0.0)).value - Scene(p - vec3(0.0, eps, 0.0)).value;
-    normal.z = Scene(p + vec3(0.0, 0.0, eps)).value - Scene(p - vec3(0.0, 0.0, eps)).value;
-    normal = normalize(normal);
+	Distance dist = Scene(p);
+    float eps = EPS * dist.value;
 
-    return vec3(max(dot(LIGHT_DIR, normal), 0.0) * 0.8 * shadow(p + normal*eps + LIGHT_DIR*SHADOW_SOFTNESS, LIGHT_DIR) + 0.2);
+    vec3 normal = Normal(p, eps);
+
+    return vec3(max(dot(LIGHT_DIR, normal), 0.0) * 0.8 * shadow(p + normal*eps*50.0, LIGHT_DIR) + 0.2);
 }

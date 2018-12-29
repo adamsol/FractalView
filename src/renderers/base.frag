@@ -4,6 +4,31 @@ precision highp float;
 uniform vec2 screenRes;
 uniform vec3 cameraPos;
 uniform vec3 cameraDir;
+uniform vec2 randSeed;
+
+uniform sampler2D frameBuffer;
+uniform float framesCount;
+
+varying vec2 texCoords;
+
+vec2 randCoord;
+
+float rand()
+{
+	float x = fract(sin(dot(randCoord, vec2(182.8497, -2154.9248))) * 38223.19);
+	randCoord += vec2(x);
+	return x;
+}
+vec3 randHemisphere(vec3 normal)
+{
+    float b = rand()*6.2831853;
+	float c = acos(1.0-rand()*2.0);
+	float x = sin(b)*sin(c);
+	float y = sin(c);
+	float z = sin(b)*cos(c);
+	vec3 v = vec3(sin(b)*sin(c), cos(c), cos(b)*sin(c));
+	return dot(v, normal) < 0.0 ? -v : v;
+}
 
 vec3 hsv2rgb(float x, float y, float z)
 {
@@ -19,6 +44,11 @@ vec3 hsv2rgb(vec3 c)
 vec3 repeat(vec3 p, vec3 s)
 {
 	return mod(p + s/2.0, s) - s/2.0;
+}
+
+vec3 translate(vec3 p, vec3 t)
+{
+	return p - t;
 }
 
 vec3 rotateX(vec3 p, float a)
@@ -49,7 +79,17 @@ struct Distance
 {
 	float value;
 	vec3 color;
+	float emission;
 };
+
+Distance Color(float value, vec3 color)
+{
+    return Distance(value, color, 0.0);
+}
+Distance Light(float value, vec3 color)
+{
+    return Distance(value, color, 1.0);
+}
 
 Distance Union(Distance a, Distance b)
 {
@@ -67,7 +107,7 @@ Distance Intersection(Distance a, Distance b)
 }
 Distance Complement(Distance a)
 {
-	return Distance(-a.value, a.color);
+	return Distance(-a.value, a.color, a.emission);
 }
 Distance Difference(Distance a, Distance b)
 {
@@ -75,6 +115,15 @@ Distance Difference(Distance a, Distance b)
 }
 
 // {fractal}
+
+vec3 Normal(vec3 p, float eps)
+{
+    vec3 n;
+    n.x = Scene(p + vec3(eps, 0.0, 0.0)).value - Scene(p - vec3(eps, 0.0, 0.0)).value;
+    n.y = Scene(p + vec3(0.0, eps, 0.0)).value - Scene(p - vec3(0.0, eps, 0.0)).value;
+    n.z = Scene(p + vec3(0.0, 0.0, eps)).value - Scene(p - vec3(0.0, 0.0, eps)).value;
+    return normalize(n);
+}
 
 // {lighting}
 
@@ -89,7 +138,7 @@ vec3 raymarch(vec3 p, vec3 dir)
 		float d = dist.value;
 
 		if (d <= eps) {
-			return dist.color * Lighting(i, p, eps);
+			return dist.color * Lighting(i, p);
 		}
 		p += dir * d;
 	}
@@ -99,6 +148,7 @@ vec3 raymarch(vec3 p, vec3 dir)
 void main(void)
 {
 	vec2 p = (gl_FragCoord.xy*2.0 - screenRes) / min(screenRes.x, screenRes.y);
+	randCoord = randSeed + p;
 
 	vec3 cDir = cameraDir;
 	vec3 cSide = normalize(cross(cDir, vec3(0.0, 1.0, 0.0)));
@@ -107,5 +157,5 @@ void main(void)
 
 	vec3 color = raymarch(cameraPos, rayDir);
 
-	gl_FragColor = vec4(color, 1.0);
+	gl_FragColor = (vec4(color, 1.0) + texture2D(frameBuffer, texCoords) * framesCount) / (framesCount + 1.0);
 }

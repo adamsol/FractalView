@@ -95,8 +95,20 @@ function SceneView(container, state)
 	this.canvas.attr('tabindex', 42).css('outline', 'none');
 
 	this.renderer = new THREE.WebGLRenderer({antialias: true});
-	this.renderer.shadowMap.enabled = true;
 	this.canvas.append(this.renderer.domElement);
+
+	this.shader = null;
+	this.frame = {};
+
+	this.frame.scene = new THREE.Scene();
+	this.frame.mesh = new THREE.Mesh(new THREE.PlaneBufferGeometry(2.0, 2.0), null);
+	this.frame.scene.add(this.frame.mesh);
+
+	this.frame.buffer1 = new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight, {minFilter: THREE.LinearFilter, magFilter: THREE.NearestFilter});
+	this.frame.buffer2 = new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight, {minFilter: THREE.LinearFilter, magFilter: THREE.NearestFilter});
+	this.frame.material = new THREE.MeshBasicMaterial({map: this.frame.buffer2});
+	this.frame.camera = new THREE.Camera();
+	this.frame.count = 0;
 
 	this.camera = new THREE.PerspectiveCamera(75, 1, 0.01, 1000);
 	this.camera.rotation.order = 'YXZ';
@@ -112,18 +124,56 @@ function SceneView(container, state)
 	container.on('destroy', this.onDestroy.bind(this));
 }
 
+SceneView.prototype.initShader = function(vertex, fragment)
+{
+	this.shader = new THREE.RawShaderMaterial({
+		vertexShader: vertex,
+		fragmentShader: fragment,
+		uniforms: {
+			CX: {value: 2.0},
+			screenRes: {},
+			cameraPos: {},
+			cameraDir: {},
+			randSeed: {},
+			framesCount: {value: 0},
+			frameBuffer: {value: this.frame.buffer1},
+		},
+	});
+	this.frame.count = 0;
+};
+
 SceneView.prototype.animate = function()
 {
-	if (mesh && mesh.material && this.renderer) {
+	if (this.shader && this.renderer) {
 
 		var dt = this.clock.getDelta();
 		this.controls.update(dt);
 
-		mesh.material.uniforms.screenRes.value = new THREE.Vector2(this.canvas.width(), this.canvas.height());
-		mesh.material.uniforms.cameraPos.value = this.camera.getWorldPosition();
-		mesh.material.uniforms.cameraDir.value = this.camera.getWorldDirection();
+		// When the camera is not moving, consecutive frames will be accumulated and blended together.
+		if (this.controls.unlocked) {
+			this.frame.count = 0;
+		}
 
-		this.renderer.render(scene, camera);
+		this.shader.uniforms.screenRes.value = new THREE.Vector2(this.canvas.width(), this.canvas.height());
+		this.shader.uniforms.cameraPos.value = this.camera.getWorldPosition();
+		this.shader.uniforms.cameraDir.value = this.camera.getWorldDirection();
+		this.shader.uniforms.randSeed.value = new THREE.Vector2(THREE.Math.randFloat(0.0, 1.0), THREE.Math.randFloat(0.0, 1.0));
+		this.shader.uniforms.frameBuffer.value = this.frame.buffer1;
+		this.shader.uniforms.framesCount.value = this.frame.count;
+
+		this.frame.count += 1;
+
+		// Render scene to buffer2.
+		this.frame.mesh.material = this.shader;
+		this.renderer.render(this.frame.scene, this.frame.camera, this.frame.buffer2);
+
+		// Render buffer2 to buffer1.
+		this.frame.mesh.material = this.frame.material;
+		this.renderer.render(this.frame.scene, this.frame.camera, this.frame.buffer1);
+
+		// Render to the screen.
+		this.frame.mesh.material = this.frame.material;
+		this.renderer.render(this.frame.scene, this.frame.camera);
 	}
 
 	requestAnimationFrame(this.animate.bind(this));
@@ -135,6 +185,9 @@ SceneView.prototype.onResize = function()
 
 	this.camera.aspect = width / height;
 	this.camera.updateProjectionMatrix();
+
+	this.frame.buffer1.setSize(width, height);
+	this.frame.buffer2.setSize(width, height);
 
 	this.renderer.setSize(width, height);
 };

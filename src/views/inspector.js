@@ -7,13 +7,13 @@ function InspectorView(container, state)
 	let fractal_select = $('<select>', {'class': 'fractal'}).appendTo(self.container);
 	for (let name of fs.readdirSync('src/renderers/fractal')) {
 		$('<option>', {value: name, text: path.basename(name, '.glsl')}).appendTo(fractal_select);
-	};
+	}
 	fractal_select.on('change', {self: self}, self.onChange);
 
 	let lighting_select = $('<select>', {'class': 'lighting'}).appendTo(self.container);
 	for (let name of fs.readdirSync('src/renderers/lighting')) {
 		$('<option>', {value: name, text: path.basename(name, '.glsl')}).appendTo(lighting_select);
-	};
+	}
 	lighting_select.on('change', {self: self}, self.onChange);
 
 	self.update();
@@ -40,20 +40,8 @@ InspectorView.prototype.update = function()
 		$.get('renderers/lighting/{}'.format(lighting)),
 	];
 	$.when(...promises).done(function(vertex, fragment, fractal, lighting) {
-		if (mesh) {
-			scene.remove(mesh);
+		for (let view of layout.root.getComponentsByName('scene')) {
+			view.initShader(vertex[0], fragment[0].format({fractal: fractal[0], lighting: lighting[0]}));
 		}
-		mesh = new THREE.Mesh(new THREE.PlaneBufferGeometry(2.0, 2.0), null);
-		mesh.material = new THREE.RawShaderMaterial({
-			uniforms: {
-				CX: {value: 2.0},
-				screenRes: {},
-				cameraPos: {},
-				cameraDir: {},
-			},
-			vertexShader: vertex[0],
-			fragmentShader: fragment[0].format({fractal: fractal[0], lighting: lighting[0]}),
-		});
-		scene.add(mesh);
 	});
 };

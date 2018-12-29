@@ -31,5 +31,5 @@ Distance Scene(vec3 p)
             break;
     }
 
-    return Distance((length(z)-2.0) * pow(scale, -t), hsv2rgb(-b*0.3-0.4, 0.6, 0.7));
+    return Color((length(z)-2.0) * pow(scale, -t), hsv2rgb(-b*0.3-0.4, 0.6, 0.7));
 }
