@@ -147,13 +147,15 @@ vec3 raymarch(vec3 p, vec3 dir)
 
 void main(void)
 {
-	vec2 p = (gl_FragCoord.xy*2.0 - screenRes) / min(screenRes.x, screenRes.y);
-	randCoord = randSeed + p;
+    float res = min(screenRes.x, screenRes.y);
+	vec2 pos = (gl_FragCoord.xy*2.0 - screenRes) / res;
+	randCoord = randSeed + pos;
 
+	vec2 cPos = pos + vec2(rand()*2.0-1.0, rand()*2.0-1.0) / res;
 	vec3 cDir = cameraDir;
 	vec3 cSide = normalize(cross(cDir, vec3(0.0, 1.0, 0.0)));
 	vec3 cUp = normalize(cross(cSide, cDir));
-	vec3 rayDir = normalize(cSide * p.x + cUp * p.y + cDir * 1.5);
+	vec3 rayDir = normalize(cSide * cPos.x + cUp * cPos.y + cDir * 1.5);
 
 	vec3 color = raymarch(cameraPos, rayDir);
 
