@@ -2,14 +2,11 @@
 function CameraControls(camera, container)
 {
 	this.camera = camera;
-
 	this.speed = {
 		rotation: 0.003, // radians/pixel
 		movement: 5, // units/second
 	};
-
 	this.unlocked = false;
-
 	this.keys = {};
 
 	container.on('mousedown', this.onMouseDown.bind(this));
@@ -23,8 +20,8 @@ function CameraControls(camera, container)
 CameraControls.prototype.update = function(dt)
 {
 	if (this.unlocked) {
-		var dist = this.speed.movement * dt;
-		var axis = new THREE.Vector3();
+		let dist = this.speed.movement * dt;
+		let axis = new THREE.Vector3();
 
 		if (this.keys[Keys.W]) {
 			axis.z -= 1;
@@ -56,8 +53,8 @@ CameraControls.prototype.onMouseDown = function(event)
 CameraControls.prototype.onMouseMove = function(event)
 {
 	if (this.unlocked && this.prev_pos) {
-		var dh = event.clientX - this.prev_pos.x;
-		var dv = event.clientY - this.prev_pos.y;
+		let dh = event.clientX - this.prev_pos.x;
+		let dv = event.clientY - this.prev_pos.y;
 		this.camera.rotation.y -= this.speed.rotation * dh;
 		this.camera.rotation.x -= this.speed.rotation * dv;
 	}
@@ -152,7 +149,7 @@ SceneView.prototype.animate = function()
 
 	if (this.shader && this.renderer) {
 
-		var dt = this.clock.getDelta();
+		let dt = this.clock.getDelta();
 		this.controls.update(dt);
 
 		// When the camera is not moving, consecutive frames will be accumulated and blended together.
@@ -189,7 +186,7 @@ SceneView.prototype.animate = function()
 
 SceneView.prototype.onResize = function()
 {
-	var width = this.canvas.width(), height = this.canvas.height();
+	let width = this.canvas.width(), height = this.canvas.height();
 
 	this.camera.aspect = width / height;
 	this.camera.updateProjectionMatrix();

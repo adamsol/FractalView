@@ -11,10 +11,9 @@ Array.prototype.extend = function(arr)
 	}.bind(this));
 };
 
-
 Array.prototype.remove = function(el)
 {
-	var index = this.indexOf(el);
+	let index = this.indexOf(el);
 	this.splice(index, 1);
 };
 
@@ -35,14 +34,14 @@ String.prototype.capitalize = function()
 
 String.prototype.format = function()
 {
-	var args = arguments;
+	let args = arguments;
 	return this.replace(/{([\w.]*)}/g, function(match, pattern) {
-		var attrs = pattern.split('.');
+		let attrs = pattern.split('.');
 		attrs[0] = attrs[0] || '0';
-		var obj = args;
+		let obj = args;
 		if (typeof obj[0] == 'object')
 			obj = obj[0];
-		for (var i = 0, n = attrs.length; i < n; ++i) {
+		for (let i = 0, n = attrs.length; i < n; ++i) {
 			obj = obj[attrs[i]];
 			if (obj === undefined)
 				break;
@@ -51,16 +50,16 @@ String.prototype.format = function()
 	});
 };
 
-var _ = undefined;
+let _ = undefined;
 
 Function.prototype.curry = function()
 {
-	var f = this;
-	var org_args = [].slice.call(arguments);
+	let f = this;
+	let org_args = [].slice.call(arguments);
 	return function() {
-		var args = org_args.slice();
-		var new_args = [].slice.call(arguments);
-		var i, j;
+		let args = org_args.slice();
+		let new_args = [].slice.call(arguments);
+		let i, j;
 		for (i = 0, j = 0; i < args.length && j < new_args.length; ++i) {
 			if (args[i] === _) {
 				args[i] = new_args[j++];
@@ -72,7 +71,7 @@ Function.prototype.curry = function()
 
 Function.prototype.lock = function(n)
 {
-	var f = this;
+	let f = this;
 	return function() {
 		return f.apply(this, [].slice.call(arguments, 0, n));
 	};

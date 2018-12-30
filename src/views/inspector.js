@@ -1,35 +1,27 @@
 
 function InspectorView(container, state)
 {
-	let self = this;
-	self.container = container.getElement().empty();
+	this.container = container.getElement().empty();
 
-	let fractal_select = $('<select>', {'class': 'fractal'}).appendTo(self.container);
+	let fractal_select = $('<select>', {'class': 'fractal'}).appendTo(this.container);
 	for (let name of fs.readdirSync('src/renderers/fractal')) {
 		$('<option>', {value: name, text: path.basename(name, '.glsl')}).appendTo(fractal_select);
 	}
-	fractal_select.on('change', {self: self}, self.onChange);
+	fractal_select.on('change', this.onChange.bind(this));
 
-	let lighting_select = $('<select>', {'class': 'lighting'}).appendTo(self.container);
+	let lighting_select = $('<select>', {'class': 'lighting'}).appendTo(this.container);
 	for (let name of fs.readdirSync('src/renderers/lighting')) {
 		$('<option>', {value: name, text: path.basename(name, '.glsl')}).appendTo(lighting_select);
 	}
-	lighting_select.on('change', {self: self}, self.onChange);
+	lighting_select.on('change', this.onChange.bind(this));
 
-	self.update();
+	this.onChange();
 }
 
-InspectorView.prototype.onChange = function(event)
+InspectorView.prototype.onChange = function()
 {
-	let self = event.data.self;
-	self.update();
-};
-
-InspectorView.prototype.update = function()
-{
-	let self = this;
-	let fractal = self.container.find('.fractal').val();
-	let lighting = self.container.find('.lighting').val();
+	let fractal = this.container.find('.fractal').val();
+	let lighting = this.container.find('.lighting').val();
 	if (!fractal || !lighting) {
 		return;
 	}
