@@ -97,6 +97,10 @@ function SceneView(container, state)
 	this.renderer = new THREE.WebGLRenderer({antialias: true});
 	this.canvas.append(this.renderer.domElement);
 
+	this.stats = new Stats();
+	this.stats.dom.style.position = 'absolute';
+	this.canvas.append(this.stats.dom);
+
 	this.shader = null;
 	this.frame = {};
 
@@ -144,6 +148,8 @@ SceneView.prototype.initShader = function(vertex, fragment)
 
 SceneView.prototype.animate = function()
 {
+	this.stats.begin();
+
 	if (this.shader && this.renderer) {
 
 		var dt = this.clock.getDelta();
@@ -176,6 +182,8 @@ SceneView.prototype.animate = function()
 		this.renderer.render(this.frame.scene, this.frame.camera);
 	}
 
+	this.stats.end();
+
 	requestAnimationFrame(this.animate.bind(this));
 };
 
@@ -188,6 +196,7 @@ SceneView.prototype.onResize = function()
 
 	this.frame.buffer1.setSize(width, height);
 	this.frame.buffer2.setSize(width, height);
+	this.frame.count = 0;
 
 	this.renderer.setSize(width, height);
 };
