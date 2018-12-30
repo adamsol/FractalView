@@ -22,7 +22,7 @@ vec3 Lighting(int i, vec3 p)
 
     for (int j = 0; j < PATH_REFLECTIONS; ++j) {
         Distance dist = SceneGI(p);
-        float eps = EPS * dist.value;
+        float eps = EPS * dist.value / cameraZoom;
         vec3 n = Normal(p, eps);
         vec3 r = randHemisphere(n);
         p += r * eps*500.0;

@@ -76,3 +76,9 @@ Function.prototype.lock = function(n)
 		return f.apply(this, [].slice.call(arguments, 0, n));
 	};
 };
+
+// Beware: they are mutable!
+THREE.Vector3.Zero = new THREE.Vector3(0, 0, 0);
+THREE.Vector3.X = new THREE.Vector3(1, 0, 0);
+THREE.Vector3.Y = new THREE.Vector3(0, 1, 0);
+THREE.Vector3.Z = new THREE.Vector3(0, 0, 1);

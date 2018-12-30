@@ -10,7 +10,7 @@ const vec3 LIGHT_DIR = normalize(vec3(0.3, 0.7, 0.5));
 float shadow(vec3 p, vec3 dir)
 {
 	Distance dist = Scene(p);
-	float eps = EPS * dist.value;
+	float eps = EPS * dist.value / cameraZoom;
     float m = 10e6;
 
 	for (int i = 0; i < MAX_SHADOW_STEPS; ++i)
@@ -30,9 +30,9 @@ float shadow(vec3 p, vec3 dir)
 vec3 Lighting(int i, vec3 p)
 {
 	Distance dist = Scene(p);
-    float eps = EPS * dist.value;
+    float eps = EPS * dist.value / cameraZoom;
 
     vec3 normal = Normal(p, eps);
 
-    return vec3(max(dot(LIGHT_DIR, normal), 0.0) * 0.8 * shadow(p + normal*eps*50.0, LIGHT_DIR) + 0.2);
+    return vec3(max(dot(LIGHT_DIR, normal), 0.0) * 0.8 * shadow(p, LIGHT_DIR) + 0.2);
 }

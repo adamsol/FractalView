@@ -2,9 +2,12 @@
 precision highp float;
 
 uniform vec2 screenRes;
+uniform vec2 randSeed;
+
 uniform vec3 cameraPos;
 uniform vec3 cameraDir;
-uniform vec2 randSeed;
+uniform vec3 cameraRight;
+uniform float cameraZoom;
 
 uniform sampler2D frameBuffer;
 uniform float framesCount;
@@ -130,7 +133,7 @@ vec3 Normal(vec3 p, float eps)
 vec3 raymarch(vec3 p, vec3 dir)
 {
 	Distance dist = Scene(p);
-	float eps = EPS * dist.value;
+	float eps = EPS * dist.value / cameraZoom;
 
 	for (int i = 0; i < MAX_STEPS; ++i)
 	{
@@ -150,12 +153,10 @@ void main(void)
     float res = min(screenRes.x, screenRes.y);
 	vec2 pos = (gl_FragCoord.xy*2.0 - screenRes) / res;
 	randCoord = randSeed + pos;
+	pos += vec2(rand()*2.0-1.0, rand()*2.0-1.0) / res;
 
-	vec2 cPos = pos + vec2(rand()*2.0-1.0, rand()*2.0-1.0) / res;
-	vec3 cDir = cameraDir;
-	vec3 cSide = normalize(cross(cDir, vec3(0.0, 1.0, 0.0)));
-	vec3 cUp = normalize(cross(cSide, cDir));
-	vec3 rayDir = normalize(cSide * cPos.x + cUp * cPos.y + cDir * 1.5);
+	vec3 cameraUp = normalize(cross(cameraRight, cameraDir));
+	vec3 rayDir = normalize(cameraRight*pos.x + cameraUp*pos.y + cameraDir*cameraZoom);
 
 	vec3 color = raymarch(cameraPos, rayDir);
 
