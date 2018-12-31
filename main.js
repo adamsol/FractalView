@@ -23,6 +23,8 @@ function createMainWindow()
 
 	mainWindow.loadURL(`file://${__dirname}/src/index.html`);
 	mainWindow.on('closed', () => mainWindow = null);
+
+	mainWindow.webContents.toggleDevTools();
 }
 
 app.on('window-all-closed', () => {

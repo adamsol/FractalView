@@ -12,6 +12,7 @@ function SceneView(container, state)
 	this.canvas.append(this.stats.dom);
 
 	this.shader = null;
+	this.params = null;
 	this.frame = {};
 
 	this.frame.scene = new THREE.Scene();
@@ -44,12 +45,12 @@ SceneView.prototype.resetCamera = function()
 	this.controls.tilt = 0.0;
 };
 
-SceneView.prototype.initShader = function(vertex, fragment)
+SceneView.prototype.initShader = function(vertex, fragment, params)
 {
 	this.shader = new THREE.RawShaderMaterial({
 		vertexShader: vertex,
 		fragmentShader: fragment,
-		uniforms: {
+		uniforms: $.extend({
 			screenRes: {},
 			randSeed: {},
 			cameraPos: {value: new THREE.Vector3()},
@@ -58,9 +59,21 @@ SceneView.prototype.initShader = function(vertex, fragment)
 			cameraZoom: {},
 			frameBuffer: {value: this.frame.buffer1},
 			framesCount: {},
-		},
+		}, params),
 	});
+	this.params = params;
+	this.updateShader();
+};
+
+SceneView.prototype.updateShader = function()
+{
 	this.frame.count = 0;
+
+	if (this.params) {
+		for (let [name, param] of Object.entries(this.params)) {
+			this.shader.uniforms[name].value = param.value;
+		}
+	}
 };
 
 SceneView.prototype.animate = function()
