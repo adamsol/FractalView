@@ -40,13 +40,15 @@ InspectorView.prototype.onChange = function(event)
 		$.get('renderers/lighting/{}'.format(lighting)),
 	];
 	$.when(...promises).done(function(vertex, fragment, fractal, lighting) {
+		vertex = vertex[0];
+		fragment = fragment[0].format({fractal: fractal[0], lighting: lighting[0]});
 
 		// Parse uniform variables.
 		if (!event || $(event.target).hasClass('fractal')) {
 			this.params = {};
-			let re = /uniform\s+(\w+)\s+(\w+)(.+)/g;
+			let re = /uniform\s+(\w+)\s+([A-Z_]+)(.+)/g;
 			let match;
-			while (match = re.exec(fractal[0])) {
+			while (match = re.exec(fragment)) {
 				let name = match[2];
 				let comment = match[3];
 				this.params[name] = {
@@ -79,7 +81,7 @@ InspectorView.prototype.onChange = function(event)
 		}
 
 		for (let view of layout.root.getComponentsByName('scene')) {
-			view.initShader(vertex[0], fragment[0].format({fractal: fractal[0], lighting: lighting[0]}), this.params);
+			view.initShader(vertex, fragment, this.params);
 		}
 	}.bind(this));
 };

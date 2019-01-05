@@ -9,6 +9,9 @@ uniform vec3 cameraDir;
 uniform vec3 cameraRight;
 uniform float cameraZoom;
 
+uniform float CAMERA_BOKEH;  // default: 0.0, min: 0.0, max: 30.0
+uniform float CAMERA_FOCUS;  // default: 1.0, min: 0.0, max: 10.0
+
 uniform sampler2D frameBuffer;
 uniform float framesCount;
 
@@ -148,6 +151,24 @@ vec3 raymarch(vec3 p, vec3 dir)
 	return vec3(0.0);
 }
 
+vec3 hit(vec3 p, vec3 dir)
+{
+	Distance dist = Scene(p);
+	float eps = EPS * dist.value / cameraZoom;
+
+	for (int i = 0; i < MAX_STEPS; ++i)
+	{
+		Distance dist = Scene(p);
+		float d = dist.value;
+
+		if (d <= eps) {
+			return p;
+		}
+		p += dir * d;
+	}
+	return p;
+}
+
 void main(void)
 {
     float res = min(screenRes.x, screenRes.y);
@@ -156,9 +177,13 @@ void main(void)
 	pos += vec2(rand()*2.0-1.0, rand()*2.0-1.0) / res;
 
 	vec3 cameraUp = normalize(cross(cameraRight, cameraDir));
-	vec3 rayDir = normalize(cameraRight*pos.x + cameraUp*pos.y + cameraDir*cameraZoom);
+	vec3 cameraSth = cameraPos + cameraRight*pos.x + cameraUp*pos.y + cameraDir*cameraZoom;
+	//vec3 rayDir = normalize(cameraRight*pos.x + cameraUp*pos.y + cameraDir*cameraZoom);
 
-	vec3 color = raymarch(cameraPos, rayDir);
+    vec3 cc = normalize(cameraDir) * CAMERA_FOCUS;
+    vec3 cp = rotateX(rotateY(-cc, (rand()-0.5)*CAMERA_BOKEH), (rand()-0.5)*CAMERA_BOKEH) + cc + cameraPos;
+    vec3 rayDir = normalize(cameraSth-cp);
+	vec3 color = raymarch(cp, rayDir);
 
 	gl_FragColor = (vec4(color, 1.0) + texture2D(frameBuffer, texCoords) * framesCount) / (framesCount + 1.0);
 }
