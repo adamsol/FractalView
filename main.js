@@ -3,6 +3,7 @@ const electron = require('electron');
 const electronWindowState = require('electron-window-state');
 
 const app = electron.app;
+const Menu = electron.Menu;
 
 let mainWindow;
 
@@ -24,7 +25,7 @@ function createMainWindow()
 	mainWindow.loadURL(`file://${__dirname}/src/index.html`);
 	mainWindow.on('closed', () => mainWindow = null);
 
-	mainWindow.webContents.toggleDevTools();
+	//mainWindow.webContents.toggleDevTools();
 }
 
 app.on('window-all-closed', () => {
@@ -41,4 +42,26 @@ app.on('activate', () => {
 
 app.on('ready', () => {
 	createMainWindow();
+
+	function execute() {
+		return () => mainWindow.webContents.send.apply(mainWindow.webContents, arguments);
+	}
+
+	const menu_template = [
+		{
+			label: 'File',
+			submenu: [
+				{role: 'quit'},
+			],
+		},
+		{
+			label: 'View',
+			submenu: [
+				{role: 'reload'}, {role: 'toggledevtools'}, {type: 'separator'},
+				{label: 'Reset Layout', click: execute('resetLayout')}, {type: 'separator'},
+				{role: 'resetzoom'}, {role: 'zoomin'}, {role: 'zoomout'}, {type: 'separator'}, {role: 'togglefullscreen'},
+			],
+		},
+	];
+	Menu.setApplicationMenu(Menu.buildFromTemplate(menu_template));
 });
