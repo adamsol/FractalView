@@ -1,0 +1,33 @@
+{
+	"params": {
+		"fractal": "sierpinski-octahedron.glsl",
+		"CAMERA_BOKEH": 8.4226,
+		"CAMERA_FOCUS": 0,
+		"SCALE": 1.837,
+		"ROT1_X": 6.3959,
+		"ROT1_Y": 34.1025,
+		"ROT1_Z": 7.4419,
+		"ROT2_X": 4.9006,
+		"ROT2_Y": -2.7079,
+		"ROT2_Z": 2.8938,
+		"COLOR_HUE_SCALE": -1.0272,
+		"COLOR_HUE_OFFSET": 0.4747,
+		"COLOR_SATURATION": 0.6,
+		"COLOR_VALUE": 0.7
+	},
+	"camera": {
+		"position": {
+			"x": 0.444026842320551,
+			"y": 0.5952281551789986,
+			"z": 1.290764229168048
+		},
+		"rotation": {
+			"_x": -0.4230000000000003,
+			"_y": 6.767999999999987,
+			"_z": 0,
+			"_order": "YXZ"
+		},
+		"tilt": 0,
+		"zoom": 1.230006229413324
+	}
+}

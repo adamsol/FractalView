@@ -8,17 +8,17 @@ function InspectorView(container, state)
 		params: $('<div class="panel"></div>').appendTo(this.container),
 	};
 
-	let fractal_select = $('<select>', {'class': 'fractal'}).appendTo(this.panel.selectors);
+	this.fractal_select = $('<select>', {'class': 'fractal'}).appendTo(this.panel.selectors);
 	for (let name of fs.readdirSync('src/renderers/fractal')) {
-		$('<option>', {value: name, text: path.basename(name, '.glsl')}).appendTo(fractal_select);
+		$('<option>', {value: name, text: path.basename(name, '.glsl')}).appendTo(this.fractal_select);
 	}
-	fractal_select.on('change', this.onChange.bind(this));
+	this.fractal_select.on('change', this.onChange.bind(this));
 
-	let lighting_select = $('<select>', {'class': 'lighting'}).appendTo(this.panel.selectors);
+	this.lighting_select = $('<select>', {'class': 'lighting'}).appendTo(this.panel.selectors);
 	for (let name of fs.readdirSync('src/renderers/lighting')) {
-		$('<option>', {value: name, text: path.basename(name, '.glsl')}).appendTo(lighting_select);
+		$('<option>', {value: name, text: path.basename(name, '.glsl')}).appendTo(this.lighting_select);
 	}
-	lighting_select.on('change', this.onChange.bind(this));
+	this.lighting_select.on('change', this.onChange.bind(this));
 
 	$('<div class="panel"></div>').appendTo(this.panel.params);
 	this.params = null;
@@ -26,13 +26,32 @@ function InspectorView(container, state)
 	this.onChange();
 }
 
+InspectorView.prototype.refresh = function()
+{
+	this.fractal_select.val(scene.params.fractal);
+	this.updateParams();
+};
+
 InspectorView.prototype.onChange = function(event)
 {
-	let fractal = this.panel.selectors.find('.fractal').val();
-	let lighting = this.panel.selectors.find('.lighting').val();
+	let fractal = this.fractal_select.val();
+	let lighting = this.lighting_select.val();
 	if (!fractal || !lighting) {
 		return;
 	}
+
+	if (!event || $(event.target).hasClass('fractal')) {
+		scene.params = {};
+	}
+	scene.params.fractal = fractal;
+
+	this.updateParams();
+};
+
+InspectorView.prototype.updateParams = function(reset)
+{
+	let fractal = this.fractal_select.val();
+	let lighting = this.lighting_select.val();
 	let promises = [
 		$.get('renderers/base.vert'),
 		$.get('renderers/base.frag'),
@@ -44,20 +63,23 @@ InspectorView.prototype.onChange = function(event)
 		fragment = fragment[0].format({fractal: fractal[0], lighting: lighting[0]});
 
 		// Parse uniform variables.
-		if (!event || $(event.target).hasClass('fractal')) {
-			this.params = {};
-			let re = /uniform\s+(\w+)\s+([A-Z_]+)(.+)/g;
-			let match;
-			while (match = re.exec(fragment)) {
-				let name = match[2];
-				let comment = match[3];
-				this.params[name] = {
-					type: match[1],
-					value: +/default.+?([-\d.]+)/.exec(comment)[1],
-					min: +/min.+?([-\d.]+)/.exec(comment)[1],
-					max: +/max.+?([-\d.]+)/.exec(comment)[1],
-				};
+		let re = /uniform\s+(\w+)\s+([A-Z\d_]+)(.+)/g;
+		let match;
+		this.params = {};
+		while (match = re.exec(fragment)) {
+			let name = match[2];
+			let comment = match[3];
+			let param = {
+				type: match[1],
+				default: +/default.+?([-\d.]+)/.exec(comment)[1],
+				min: +/min.+?([-\d.]+)/.exec(comment)[1],
+				max: +/max.+?([-\d.]+)/.exec(comment)[1],
+			};
+			if (scene.params[name] == undefined) {
+				scene.params[name] = param.default;
 			}
+			param.value = scene.params[name];
+			this.params[name] = param;
 		}
 
 		// Create parameter sliders.
@@ -69,7 +91,7 @@ InspectorView.prototype.onChange = function(event)
 			    max: param.max,
 				step: param.type == 'int' ? 1 : 0.0001,
 				slide: (event, ui) => {
-					param.value = ui.value;
+					scene.params[name] = param.value = ui.value;
 					$(event.target).siblings('.param-value').text(ui.value.toFixed(4));
 					this.updateScene();
 				},

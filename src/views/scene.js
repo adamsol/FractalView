@@ -43,6 +43,15 @@ SceneView.prototype.resetCamera = function()
 	this.camera.position.set(0.0, 0.0, 3.0);
 	this.camera.rotation.set(0.0, 0.0, 0.0);
 	this.controls.tilt = 0.0;
+	this.controls.zoom = 1.5;
+};
+
+SceneView.prototype.refreshCamera = function()
+{
+	this.camera.position.copy(scene.camera.position);
+	this.camera.rotation.copy(scene.camera.rotation);
+	this.controls.tilt = scene.camera.tilt;
+	this.controls.zoom = scene.camera.zoom;
 };
 
 SceneView.prototype.initShader = function(vertex, fragment, params)
@@ -100,6 +109,13 @@ SceneView.prototype.animate = function()
 		this.camera.getWorldDirection(cameraDir);
 		cameraRight.copy(cameraDir).cross(THREE.Vector3.Y).applyAxisAngle(cameraDir, this.controls.tilt).normalize();
 		this.shader.uniforms.cameraZoom.value = this.controls.zoom;
+
+		scene.camera = {
+			position: this.camera.position,
+			rotation: this.camera.rotation,
+			tilt: this.controls.tilt,
+			zoom: this.controls.zoom,
+		};
 
 		this.shader.uniforms.framesCount.value = this.frame.count;
 		this.frame.count += 1;

@@ -1,13 +1,16 @@
 
 const int NUM_ITERATIONS = 30;
 
-uniform float SCALE;                // default: 1.7, min: 1.0, max: 5.0
+uniform float SCALE;                // default: 2.0, min: 1.0, max: 5.0
+uniform float C_X;                  // default: 1.0, min: 0.0, max: 5.0
+uniform float C_Y;                  // default: 1.0, min: 0.0, max: 5.0
+uniform float C_Z;                  // default: 1.0, min: 0.0, max: 5.0
 uniform float ROT1_X;               // default: 0.0, min: -90.0, max: 90.0
 uniform float ROT1_Y;               // default: 0.0, min: -90.0, max: 90.0
-uniform float ROT1_Z;               // default: -15.0, min: -90.0, max: 90.0
-uniform float ROT2_X;               // default: 10.0, min: -90.0, max: 90.0
+uniform float ROT1_Z;               // default: 0.0, min: -90.0, max: 90.0
+uniform float ROT2_X;               // default: 0.0, min: -90.0, max: 90.0
 uniform float ROT2_Y;               // default: 0.0, min: -90.0, max: 90.0
-uniform float ROT2_Z;               // default: 20.0, min: -90.0, max: 90.0
+uniform float ROT2_Z;               // default: 0.0, min: -90.0, max: 90.0
 
 uniform float COLOR_HUE_SCALE;      // default: 1.2, min: -3.0, max: 3.0
 uniform float COLOR_HUE_OFFSET;     // default: 0.1, min: 0.0, max: 1.0
@@ -35,9 +38,9 @@ Distance Scene(vec3 p)
         z = rotateY(z, ROT2_Y);
         z = rotateX(z, ROT2_X);
 
-        z.x = scale * z.x - (scale-1.0) * 1.0;
-        z.y = scale * z.y - (scale-1.0) * 1.0;
-        z.z = scale * z.z - (scale-1.0) * 1.0;
+        z.x = scale * z.x - (scale-1.0) * C_X;
+        z.y = scale * z.y - (scale-1.0) * C_Y;
+        z.z = scale * z.z - (scale-1.0) * C_Z;
 
         float m = dot(z, z);
         b = min(m, b);

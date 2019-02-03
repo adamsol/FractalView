@@ -51,6 +51,8 @@ app.on('ready', () => {
 		{
 			label: 'File',
 			submenu: [
+				{label: 'Open', click: execute('loadFractal'), accelerator: 'CmdOrCtrl+O'}, {type: 'separator'},
+				{label: 'Save', click: execute('saveFractal'), accelerator: 'CmdOrCtrl+S'}, {label: 'Save As', click: execute('saveFractalAs'), accelerator: 'CmdOrCtrl+Shift+S'}, {type: 'separator'},
 				{role: 'quit'},
 			],
 		},

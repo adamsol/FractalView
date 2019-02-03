@@ -1,0 +1,33 @@
+{
+	"params": {
+		"fractal": "menger-sponge.glsl",
+		"CAMERA_BOKEH": 0,
+		"CAMERA_FOCUS": 1,
+		"SCALE": 3,
+		"ROT1_X": 0,
+		"ROT1_Y": 0,
+		"ROT1_Z": 0,
+		"ROT2_X": 25,
+		"ROT2_Y": 0,
+		"ROT2_Z": 8,
+		"COLOR_HUE_SCALE": -0.3,
+		"COLOR_HUE_OFFSET": 0.6,
+		"COLOR_SATURATION": 0.6,
+		"COLOR_VALUE": 0.7
+	},
+	"camera": {
+		"position": {
+			"x": 0,
+			"y": 0,
+			"z": 3
+		},
+		"rotation": {
+			"_x": 0,
+			"_y": 0,
+			"_z": 0,
+			"_order": "YXZ"
+		},
+		"tilt": 0,
+		"zoom": 1.5
+	}
+}
