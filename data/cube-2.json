@@ -1,8 +1,8 @@
 {
 	"params": {
 		"fractal": "menger-sponge.glsl",
-		"CAMERA_BOKEH": 2.8106,
-		"CAMERA_FOCUS": 0,
+		"CAMERA_BOKEH": 0,
+		"CAMERA_FOCUS": 1,
 		"SCALE": 3,
 		"C_X": 0.4583,
 		"C_Y": 1.0702,
@@ -16,7 +16,7 @@
 		"COLOR_HUE_SCALE": -0.3813,
 		"COLOR_HUE_OFFSET": 0.3129,
 		"COLOR_SATURATION": 0.6,
-		"COLOR_VALUE": 0.7
+		"COLOR_VALUE": 0.8
 	},
 	"camera": {
 		"position": {
@@ -30,6 +30,7 @@
 			"_z": 0,
 			"_order": "YXZ"
 		},
+		"speed": 1,
 		"tilt": 0,
 		"zoom": 1.5
 	}

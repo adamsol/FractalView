@@ -1,8 +1,8 @@
 {
 	"params": {
 		"fractal": "sierpinski-octahedron.glsl",
-		"CAMERA_BOKEH": 8.4226,
-		"CAMERA_FOCUS": 0,
+		"CAMERA_BOKEH": 0,
+		"CAMERA_FOCUS": 1,
 		"SCALE": 1.8563,
 		"ROT1_X": -22.6588,
 		"ROT1_Y": -7.0622,
@@ -27,6 +27,7 @@
 			"_z": 0,
 			"_order": "YXZ"
 		},
+		"speed": 1,
 		"tilt": 0,
 		"zoom": 1.5
 	}

@@ -27,6 +27,7 @@
 			"_z": 0,
 			"_order": "YXZ"
 		},
+		"speed": 1,
 		"tilt": 0,
 		"zoom": 1.5
 	}

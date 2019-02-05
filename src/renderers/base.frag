@@ -35,6 +35,12 @@ vec3 randHemisphere(vec3 normal)
 	vec3 v = vec3(sin(b)*sin(c), cos(c), cos(b)*sin(c));
 	return dot(v, normal) < 0.0 ? -v : v;
 }
+vec2 randDisk()
+{
+    float a = rand()*6.2831853;
+    float r = sqrt(rand());
+	return vec2(cos(a), sin(a)) * r;
+}
 
 vec3 hsv2rgb(float x, float y, float z)
 {
@@ -175,15 +181,14 @@ void main(void)
 	vec2 pos = (gl_FragCoord.xy*2.0 - screenRes) / res;
 	randCoord = randSeed + pos;
 	pos += vec2(rand()*2.0-1.0, rand()*2.0-1.0) / res;
+    vec2 bokeh = randDisk() * CAMERA_BOKEH / 100.0;
 
 	vec3 cameraUp = normalize(cross(cameraRight, cameraDir));
-	vec3 cameraSth = cameraPos + cameraRight*pos.x + cameraUp*pos.y + cameraDir*cameraZoom;
-	//vec3 rayDir = normalize(cameraRight*pos.x + cameraUp*pos.y + cameraDir*cameraZoom);
+    vec3 cameraCenter = cameraPos + normalize(cameraRight*pos.x + cameraUp*pos.y + cameraDir*cameraZoom) * CAMERA_FOCUS;
+    vec3 cameraOrigin = cameraPos + cameraRight*bokeh.x + cameraUp*bokeh.y;
+    vec3 rayDir = normalize(cameraCenter - cameraOrigin);
 
-    vec3 cc = normalize(cameraDir) * CAMERA_FOCUS;
-    vec3 cp = rotateX(rotateY(-cc, (rand()-0.5)*CAMERA_BOKEH), (rand()-0.5)*CAMERA_BOKEH) + cc + cameraPos;
-    vec3 rayDir = normalize(cameraSth-cp);
-	vec3 color = raymarch(cp, rayDir);
+	vec3 color = raymarch(cameraOrigin, rayDir);
 
 	gl_FragColor = (vec4(color, 1.0) + texture2D(frameBuffer, texCoords) * framesCount) / (framesCount + 1.0);
 }
