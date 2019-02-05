@@ -1,20 +1,20 @@
 
 function CameraControls(camera, container)
 {
-	this.camera = camera;
-	this.camera.rotation.order = 'YXZ';
-	this.tilt = 0.0;
-	this.zoom = 1.5;
-
-	this.speed = {
-		rotation: 0.003,  // radians/pixel
+	this.SPEED = {
 		movement: 5.0,  // units/second
+		rotation: 0.003,  // radians/pixel
 		tilt: 1.0,  // radians/second
 		zoom: 1.0,
 	};
+	this.DEFAULTS = {
+		speed: 1.0,
+		tilt: 0.0,
+		zoom: 1.5,
+	};
 
-	this.unlocked = false;
-	this.keys = {};
+	this.camera = camera;
+	this.reset();
 
 	container.on('mousedown', this.onMouseDown.bind(this));
 	$(window).on('mouseup', this.onMouseUp.bind(this));
@@ -24,10 +24,29 @@ function CameraControls(camera, container)
 	container.on('keyup', this.onKeyUp.bind(this));
 }
 
+CameraControls.prototype.reset = function()
+{
+	for (let [name, value] of Object.entries(this.DEFAULTS)) {
+		this[name] = value;
+	}
+	this.unlocked = false;
+	this.keys = {};
+};
+
+CameraControls.prototype.copy = function(data)
+{
+	for (let [name, value] of Object.entries(this.DEFAULTS)) {
+		if (data[name] !== undefined) {
+			value = data[name];
+		}
+		this[name] = value;
+	}
+};
+
 CameraControls.prototype.update = function(dt)
 {
 	if (this.unlocked) {
-		let dist = this.speed.movement * dt;
+		let dist = this.SPEED.movement * this.speed * dt;
 		let axis = new THREE.Vector3();
 
 		if (this.keys[Keys.W]) {
@@ -51,18 +70,18 @@ CameraControls.prototype.update = function(dt)
 		this.camera.translateOnAxis(axis.normalize(), dist);
 
 		if (this.keys[Keys.Z]) {
-			this.tilt -= this.speed.tilt * dt;
+			this.tilt -= this.SPEED.tilt * dt;
 		}
 		if (this.keys[Keys.C]) {
-			this.tilt += this.speed.tilt * dt;
+			this.tilt += this.SPEED.tilt * dt;
 		}
 		this.camera.rotation.z = -this.tilt;
 
 		if (this.keys[Keys.F]) {
-			this.zoom *= 1.0 + this.speed.zoom * dt;
+			this.zoom *= 1.0 + this.SPEED.zoom * dt;
 		}
 		if (this.keys[Keys.V]) {
-			this.zoom /= 1.0 + this.speed.zoom * dt;
+			this.zoom /= 1.0 + this.SPEED.zoom * dt;
 		}
 	}
 };
@@ -77,8 +96,8 @@ CameraControls.prototype.onMouseMove = function(event)
 	if (this.unlocked && this.prev_pos) {
 		let dh = event.clientX - this.prev_pos.x;
 		let dv = event.clientY - this.prev_pos.y;
-		this.camera.rotation.y -= this.speed.rotation * dh;
-		this.camera.rotation.x -= this.speed.rotation * dv;
+		this.camera.rotation.y -= this.SPEED.rotation * dh;
+		this.camera.rotation.x -= this.SPEED.rotation * dv;
 		this.camera.rotation.x = THREE.Math.clamp(this.camera.rotation.x, -1.5, 1.5);
 	}
 	this.prev_pos = {x: event.clientX, y: event.clientY};
@@ -93,9 +112,9 @@ CameraControls.prototype.onMouseWheel = function(event)
 {
 	let delta = event.originalEvent.deltaY;
 	if (delta < 0) {
-		this.speed.movement *= 0.8;
+		this.speed *= 0.8;
 	} else if (delta > 0) {
-		this.speed.movement /= 0.8;
+		this.speed /= 0.8;
 	}
 };
 

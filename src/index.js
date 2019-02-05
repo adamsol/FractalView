@@ -32,10 +32,10 @@ function loadFractal(file_path)
 		fs.readFile(file_path, (error, content) => {
 			try {
 				scene = JSON.parse(content);
-				for (view of layout.root.getComponentsByName('inspector')) {
+				for (let view of layout.root.getComponentsByName('inspector')) {
 					view.refresh();
 				}
-				for (view of layout.root.getComponentsByName('scene')) {
+				for (let view of layout.root.getComponentsByName('scene')) {
 					view.refreshCamera();
 				}
 				current_path = file_path;
@@ -45,6 +45,7 @@ function loadFractal(file_path)
 		});
 	}
 }
+
 function saveFractal(file_path)
 {
 	if (!file_path) {
