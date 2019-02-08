@@ -9,8 +9,13 @@ uniform vec3 cameraDir;
 uniform vec3 cameraRight;
 uniform float cameraZoom;
 
-uniform float CAMERA_BOKEH;  // default: 0.0, min: 0.0, max: 30.0
-uniform float CAMERA_FOCUS;  // default: 1.0, min: 0.0, max: 10.0
+uniform float CAMERA_BOKEH;         // default: 0.0, min: 0.0, max: 30.0
+uniform float CAMERA_FOCUS;         // default: 1.0, min: 0.0, max: 10.0
+
+uniform float COLOR_HUE_SCALE;      // default: 1.0, min: -5.0, max: 5.0
+uniform float COLOR_HUE_OFFSET;     // default: 0.0, min: 0.0, max: 1.0
+uniform float COLOR_SATURATION;     // default: 0.6, min: 0.0, max: 3.0
+uniform float COLOR_VALUE;          // default: 0.7, min: 0.0, max: 5.0
 
 uniform sampler2D frameBuffer;
 uniform float framesCount;

@@ -61,9 +61,30 @@ function saveFractal(file_path)
 		});
 	} else {
 		let str = JSON.stringify(scene, null, '\t');
-		fs.writeFile(file_path, str);
+		fs.writeFile(file_path, str, (err) => {
+			console.error(err);
+		});
 		current_path = file_path;
 	}
+}
+
+function saveImage()
+{
+	let data = {
+		filters: [{name: 'Image', extensions: ['jpg']}],
+		defaultPath: path.join(app.getAppPath(), 'img'),
+	};
+	dialog.showSaveDialog(data, file => {
+		if (!file) {
+			return;
+		}
+		for (let view of layout.root.getComponentsByName('scene')) {
+			let img = view.getImage();
+			fs.writeFile(file, img, 'base64', (err) => {
+				console.error(err);
+			});
+		}
+	});
 }
 
 
@@ -109,6 +130,9 @@ electron.ipcRenderer.on('saveFractal', (event) => {
 });
 electron.ipcRenderer.on('saveFractalAs', (event) => {
 	saveFractal();
+});
+electron.ipcRenderer.on('saveImage', (event) => {
+	saveImage();
 });
 
 $(window).on('beforeunload', () => {

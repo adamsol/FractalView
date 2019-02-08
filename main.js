@@ -53,6 +53,7 @@ app.on('ready', () => {
 			submenu: [
 				{label: 'Open', click: execute('loadFractal'), accelerator: 'CmdOrCtrl+O'}, {type: 'separator'},
 				{label: 'Save', click: execute('saveFractal'), accelerator: 'CmdOrCtrl+S'}, {label: 'Save As', click: execute('saveFractalAs'), accelerator: 'CmdOrCtrl+Shift+S'}, {type: 'separator'},
+				{label: 'Save Image', click: execute('saveImage'), accelerator: 'CmdOrCtrl+E'}, {type: 'separator'},
 				{role: 'quit'},
 			],
 		},

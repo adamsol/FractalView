@@ -137,6 +137,15 @@ SceneView.prototype.animate = function()
 	requestAnimationFrame(this.animate.bind(this));
 };
 
+SceneView.prototype.getImage = function()
+{
+	// Screenshot has to made immediately after the scene is rendered, otherwise it will be black.
+	// https://stackoverflow.com/questions/30628064/how-to-toggle-preservedrawingbuffer-in-three-js
+	this.animate();
+	let url = this.renderer.domElement.toDataURL('image/jpeg');
+	return url.replace(/^data:image\/jpeg;base64,/, "");
+};
+
 SceneView.prototype.onKeyDown = function()
 {
 	if (this.controls.unlocked && event.keyCode == Keys.R) {

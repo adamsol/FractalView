@@ -12,11 +12,6 @@ uniform float ROT2_X;               // default: 0.0, min: -90.0, max: 90.0
 uniform float ROT2_Y;               // default: 0.0, min: -90.0, max: 90.0
 uniform float ROT2_Z;               // default: 0.0, min: -90.0, max: 90.0
 
-uniform float COLOR_HUE_SCALE;      // default: 1.2, min: -3.0, max: 3.0
-uniform float COLOR_HUE_OFFSET;     // default: 0.1, min: 0.0, max: 1.0
-uniform float COLOR_SATURATION;     // default: 0.6, min: 0.0, max: 2.0
-uniform float COLOR_VALUE;          // default: 0.7, min: 0.0, max: 2.0
-
 Distance Scene(vec3 p)
 {
     vec3 z = p;

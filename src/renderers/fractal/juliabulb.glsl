@@ -6,11 +6,6 @@ uniform float C_Y;                  // default: -0.9, min: -2.0, max: 2.0
 uniform float C_Z;                  // default: -0.2, min: -2.0, max: 2.0
 uniform float EXPONENT;             // default: 3.0, min: 1.0, max: 16.0
 
-uniform float COLOR_HUE_SCALE;      // default: -1.3, min: -3.0, max: 3.0
-uniform float COLOR_HUE_OFFSET;     // default: 0.5, min: 0.0, max: 1.0
-uniform float COLOR_SATURATION;     // default: 0.7, min: 0.0, max: 2.0
-uniform float COLOR_VALUE;          // default: 0.9, min: 0.0, max: 2.0
-
 Distance Scene(vec3 p)
 {
     vec3 z = p;
@@ -37,5 +32,5 @@ Distance Scene(vec3 p)
         if (r >= 2.0)
             break;
     }
-    return Color(r * log(r) * 0.5 / length(d), hsv2rgb(vec3(b*COLOR_HUE_SCALE+COLOR_HUE_OFFSET, COLOR_SATURATION, COLOR_VALUE)));
+    return Color(r * log(r) * 0.5 / length(d), hsv2rgb(vec3(b*COLOR_HUE_SCALE+COLOR_HUE_OFFSET, COLOR_SATURATION, COLOR_VALUE*1.3)));
 }
