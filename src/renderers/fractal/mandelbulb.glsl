@@ -1,5 +1,5 @@
 
-const int NUM_ITERATIONS = 15;
+uniform int NUM_ITERATIONS;         // default: 8, min: 0, max: 30
 
 uniform float EXPONENT;             // default: 6.0, min: 1.0, max: 16.0
 
@@ -11,8 +11,10 @@ Distance Scene(vec3 p)
     float k = EXPONENT;
     float b = 10000.0;
 
-    for (int i = 0; i < NUM_ITERATIONS; ++i)
-    {
+    for (int i = 0; i < 30; ++i) {
+        if (i == NUM_ITERATIONS) {
+            break;
+        }
         d = k * pow(r, k-1.0) * d + 1.0;
         if (r > 0.0) {
             float phi = atan(z.z, z.x);

@@ -74,6 +74,13 @@ InspectorView.prototype.updateParams = function(reset)
 				default: +/default.+?([-\d.]+)/.exec(comment)[1],
 				min: +/min.+?([-\d.]+)/.exec(comment)[1],
 				max: +/max.+?([-\d.]+)/.exec(comment)[1],
+				display: function() {
+					if (param.type == 'float') {
+						return '' + param.value.toFixed(4);
+					} else {
+						return '' + param.value;
+					}
+				}
 			};
 			if (scene.params[name] == undefined) {
 				scene.params[name] = param.default;
@@ -92,14 +99,14 @@ InspectorView.prototype.updateParams = function(reset)
 				step: param.type == 'int' ? 1 : 0.0001,
 				slide: (event, ui) => {
 					scene.params[name] = param.value = ui.value;
-					$(event.target).siblings('.param-value').text(ui.value.toFixed(4));
+					$(event.target).siblings('.param-value').text(param.display());
 					this.updateScene();
 				},
 			});
 			$(`<div class="param">
 				<span class="param-name">{0}: </span>
 				<span class="param-value">{1}</span>			
-			</div>`.format(name, param.value.toFixed(4))).append(slider).appendTo(this.panel.params);
+			</div>`.format(name, param.display())).append(slider).appendTo(this.panel.params);
 		}
 
 		for (let view of layout.root.getComponentsByName('scene')) {

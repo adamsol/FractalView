@@ -1,5 +1,5 @@
 
-const int NUM_ITERATIONS = 20;
+uniform int NUM_ITERATIONS;         // default: 10, min: 0, max: 30
 
 uniform float SCALE;                // default: 3.0, min: 1.0, max: 5.0
 uniform float C_X;                  // default: 1.0, min: 0.0, max: 5.0
@@ -19,8 +19,10 @@ Distance Scene(vec3 p)
     float b = 10000.0;
     float t = 0.0;
 
-    for (int i = 0; i < NUM_ITERATIONS; ++i)
-    {
+    for (int i = 0; i < 30; ++i) {
+        if (i == NUM_ITERATIONS) {
+            break;
+        }
         z = rotateX(z, ROT1_X);
         z = rotateY(z, ROT1_Y);
         z = rotateZ(z, ROT1_Z);
