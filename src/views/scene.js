@@ -19,8 +19,8 @@ function SceneView(container, state)
 	this.frame.mesh = new THREE.Mesh(new THREE.PlaneBufferGeometry(2.0, 2.0), null);
 	this.frame.scene.add(this.frame.mesh);
 
-	this.frame.buffer1 = new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight, {minFilter: THREE.LinearFilter, magFilter: THREE.NearestFilter});
-	this.frame.buffer2 = new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight, {minFilter: THREE.LinearFilter, magFilter: THREE.NearestFilter});
+	this.frame.buffer1 = new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight, {minFilter: THREE.LinearFilter, magFilter: THREE.NearestFilter, type: THREE.FloatType});
+	this.frame.buffer2 = new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight, {minFilter: THREE.LinearFilter, magFilter: THREE.NearestFilter, type: THREE.FloatType});
 	this.frame.material = new THREE.MeshBasicMaterial({map: this.frame.buffer2});
 	this.frame.camera = new THREE.Camera();
 	this.frame.count = 0;
