@@ -1,6 +1,10 @@
 
 precision highp float;
 
+const float PI = 3.1415926536;
+const float DEG2RAD = PI/180.0;
+const float SQRT3 = 1.7320508;
+
 uniform vec2 screenRes;
 uniform vec2 randSeed;
 
@@ -32,7 +36,7 @@ float rand()
 }
 vec3 randHemisphere(vec3 normal)
 {
-    float b = rand()*6.2831853;
+    float b = rand()*PI*2.0;
 	float c = acos(1.0-rand()*2.0);
 	float x = sin(b)*sin(c);
 	float y = sin(c);
@@ -42,9 +46,21 @@ vec3 randHemisphere(vec3 normal)
 }
 vec2 randDisk()
 {
-    float a = rand()*6.2831853;
+    float a = rand()*PI*2.0;
     float r = sqrt(rand());
 	return vec2(cos(a), sin(a)) * r;
+}
+vec2 randHexagon()
+{
+    vec2 v1 = vec2(1.0, 0.0), v2 = vec2(-0.5, SQRT3*0.5);
+    vec2 v = v1*rand() + v2*rand();  // random point on a rhombus, 1/3 of a hexagon
+    float a = rand()*3.0;
+    if (a < 1.0) {
+        v = mat2(-0.5, -SQRT3*0.5, SQRT3*0.5, -0.5) * v;  // rotate 120 degrees
+    } else if (a < 2.0) {
+        v = mat2(-0.5, SQRT3*0.5, -SQRT3*0.5, -0.5) * v;  // rotate 240 degrees
+    }
+	return v;
 }
 
 vec3 hsv2rgb(float x, float y, float z)
@@ -70,19 +86,19 @@ vec3 translate(vec3 p, vec3 t)
 
 vec3 rotateX(vec3 p, float a)
 {
-	a = -a / 57.2957795130824;
+	a = -a * DEG2RAD;
 	float c = cos(a), s = sin(a);
 	return mat3(1.0, 0.0, 0.0, 0.0, c, -s, 0.0, s, c) * p;
 }
 vec3 rotateY(vec3 p, float a)
 {
-	a = -a / 57.2957795130824;
+	a = -a * DEG2RAD;
 	float c = cos(a), s = sin(a);
 	return mat3(c, 0.0, s, 0.0, 1.0, 0.0, -s, 0.0, c) * p;
 }
 vec3 rotateZ(vec3 p, float a)
 {
-	a = -a / 57.2957795130824;
+	a = -a * DEG2RAD;
 	float c = cos(a), s = sin(a);
 	return mat3(c, -s, 0.0, s, c, 0.0, 0.0, 0.0, 1.0) * p;
 }
@@ -186,7 +202,7 @@ void main(void)
 	vec2 pos = (gl_FragCoord.xy*2.0 - screenRes) / res;
 	randCoord = randSeed + pos;
 	pos += vec2(rand()*2.0-1.0, rand()*2.0-1.0) / res;
-    vec2 bokeh = randDisk() * CAMERA_BOKEH / 100.0;
+    vec2 bokeh = randHexagon() * CAMERA_BOKEH / 100.0;
 
 	vec3 cameraUp = normalize(cross(cameraRight, cameraDir));
     vec3 cameraCenter = cameraPos + normalize(cameraRight*pos.x + cameraUp*pos.y + cameraDir*cameraZoom) * CAMERA_FOCUS;
