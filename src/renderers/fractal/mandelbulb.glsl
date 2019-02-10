@@ -25,10 +25,12 @@ Distance Scene(vec3 p)
             z = vec3(cos(phi) * cos(theta), sin(theta), sin(phi) * cos(theta)) * r;
         }
         z += p;
+
         r = length(z);
         b = min(r, b);
-        if (r >= 2.0)
+        if (r >= 2.0) {
             break;
+        }
     }
     return Color(r * log(r) * 0.5 / length(d), hsv2rgb(vec3(b*COLOR_HUE_SCALE+COLOR_HUE_OFFSET, COLOR_SATURATION, COLOR_VALUE*1.3)));
 }

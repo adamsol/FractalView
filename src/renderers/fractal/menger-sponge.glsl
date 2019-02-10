@@ -39,8 +39,8 @@ Distance Scene(vec3 p)
         z.x = scale * z.x - (scale-1.0) * C_X;
         z.y = scale * z.y - (scale-1.0) * C_Y;
         z.z = scale * z.z;
-        if (z.z > (scale-1.0) * 0.5 * C_Z) {
-            z.z -= (scale-1.0) * 1.0;
+        if (z.z > (scale-1.0)*0.5 * C_Z) {
+            z.z -= (scale-1.0) * C_Z;
         }
 
         float m = dot(z, z);
@@ -51,5 +51,5 @@ Distance Scene(vec3 p)
         }
     }
 
-    return Color((length(z)-2.0) * pow(scale, -t), hsv2rgb(b*COLOR_HUE_SCALE+COLOR_HUE_OFFSET, COLOR_SATURATION, COLOR_VALUE));
+    return Color((length(z)-2.0) * pow(scale, -t), hsv2rgb(b*COLOR_HUE_SCALE*0.3+COLOR_HUE_OFFSET, COLOR_SATURATION, COLOR_VALUE));
 }

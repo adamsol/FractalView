@@ -10,7 +10,7 @@
 		"ROT2_X": 25,
 		"ROT2_Y": 0,
 		"ROT2_Z": 8,
-		"COLOR_HUE_SCALE": -0.3,
+		"COLOR_HUE_SCALE": -1,
 		"COLOR_HUE_OFFSET": 0.6,
 		"COLOR_SATURATION": 0.6,
 		"COLOR_VALUE": 0.7,
