@@ -51,7 +51,7 @@ function saveFractal(file_path)
 	if (!file_path) {
 		let data = {
 			filters: [{name: 'Fractal', extensions: ['json']}],
-			defaultPath: app.getAppPath(),
+			defaultPath: path.join(app.getAppPath(), 'data'),
 		};
 		dialog.showSaveDialog(data, file => {
 			if (!file) {

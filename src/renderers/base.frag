@@ -11,10 +11,12 @@ uniform vec2 randSeed;
 uniform vec3 cameraPos;
 uniform vec3 cameraDir;
 uniform vec3 cameraRight;
-uniform float cameraZoom;
+uniform float cameraSpeed;
 
-uniform float CAMERA_BOKEH;         // default: 0.0, min: 0.0, max: 30.0
-uniform float CAMERA_FOCUS;         // default: 1.0, min: 0.0, max: 10.0
+uniform float CAMERA_BOKEH;         // default: 0.0, min: 0.0, max: 1.0
+uniform float CAMERA_FOCUS;         // default: 3.0, min: 0.0, max: 10.0
+uniform float CAMERA_TILT;          // default: 0.0, min: -180.0, max: 180.0
+uniform float CAMERA_ZOOM;          // default: 1.5, min: 0.0, max: 20.0
 
 uniform float COLOR_HUE_SCALE;      // default: 1.0, min: -5.0, max: 5.0
 uniform float COLOR_HUE_OFFSET;     // default: 0.0, min: 0.0, max: 1.0
@@ -63,6 +65,12 @@ vec2 randHexagon()
 	return v;
 }
 
+vec2 rotate2(vec2 p, float a)
+{
+    a = a * DEG2RAD;
+    float c = cos(a), s = sin(a);
+    return mat2(c, -s, s, c) * p;
+}
 vec3 hsv2rgb(float x, float y, float z)
 {
 	vec4 K = vec4(1.0, 2.0/3.0, 1.0/3.0, 3.0);
@@ -163,7 +171,7 @@ vec3 Normal(vec3 p, float eps)
 vec3 raymarch(vec3 p, vec3 dir)
 {
 	Distance dist = Scene(p);
-	float eps = EPS * dist.value / cameraZoom;
+	float eps = EPS * dist.value / CAMERA_ZOOM;
 
 	for (int i = 0; i < MAX_STEPS; ++i)
 	{
@@ -181,7 +189,7 @@ vec3 raymarch(vec3 p, vec3 dir)
 vec3 hit(vec3 p, vec3 dir)
 {
 	Distance dist = Scene(p);
-	float eps = EPS * dist.value / cameraZoom;
+	float eps = EPS * dist.value / CAMERA_ZOOM;
 
 	for (int i = 0; i < MAX_STEPS; ++i)
 	{
@@ -201,11 +209,13 @@ void main(void)
     float res = min(screenRes.x, screenRes.y);
 	vec2 pos = (gl_FragCoord.xy*2.0 - screenRes) / res;
 	randCoord = randSeed + pos;
+
 	pos += vec2(rand()*2.0-1.0, rand()*2.0-1.0) / res;
-    vec2 bokeh = randHexagon() * CAMERA_BOKEH / 100.0;
+	pos = rotate2(pos, CAMERA_TILT);
+    vec2 bokeh = randHexagon() * CAMERA_BOKEH * cameraSpeed;
 
 	vec3 cameraUp = normalize(cross(cameraRight, cameraDir));
-    vec3 cameraCenter = cameraPos + normalize(cameraRight*pos.x + cameraUp*pos.y + cameraDir*cameraZoom) * CAMERA_FOCUS;
+    vec3 cameraCenter = cameraPos + normalize(cameraRight*pos.x + cameraUp*pos.y + cameraDir*CAMERA_ZOOM) * CAMERA_FOCUS * cameraSpeed;
     vec3 cameraOrigin = cameraPos + cameraRight*bokeh.x + cameraUp*bokeh.y;
     vec3 rayDir = normalize(cameraCenter - cameraOrigin);
 

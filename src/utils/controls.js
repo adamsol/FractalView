@@ -4,16 +4,13 @@ function CameraControls(camera, container)
 	this.SPEED = {
 		movement: 5.0,  // units/second
 		rotation: 0.003,  // radians/pixel
-		tilt: 1.0,  // radians/second
-		zoom: 1.0,
 	};
 	this.DEFAULTS = {
 		speed: 1.0,
-		tilt: 0.0,
-		zoom: 1.5,
 	};
 
 	this.camera = camera;
+	this.camera.rotation.order = 'YXZ';
 	this.reset();
 
 	container.on('mousedown', this.onMouseDown.bind(this));
@@ -68,21 +65,6 @@ CameraControls.prototype.update = function(dt)
 			axis.y += 1;
 		}
 		this.camera.translateOnAxis(axis.normalize(), dist);
-
-		if (this.keys[Keys.Z]) {
-			this.tilt -= this.SPEED.tilt * dt;
-		}
-		if (this.keys[Keys.C]) {
-			this.tilt += this.SPEED.tilt * dt;
-		}
-		this.camera.rotation.z = -this.tilt;
-
-		if (this.keys[Keys.F]) {
-			this.zoom *= 1.0 + this.SPEED.zoom * dt;
-		}
-		if (this.keys[Keys.V]) {
-			this.zoom /= 1.0 + this.SPEED.zoom * dt;
-		}
 	}
 };
 
@@ -110,11 +92,13 @@ CameraControls.prototype.onMouseUp = function(event)
 
 CameraControls.prototype.onMouseWheel = function(event)
 {
-	let delta = event.originalEvent.deltaY;
-	if (delta < 0) {
-		this.speed *= 0.8;
-	} else if (delta > 0) {
-		this.speed /= 0.8;
+	if (this.unlocked) {
+		let delta = event.originalEvent.deltaY;
+		if (delta < 0) {
+			this.speed *= 0.8;
+		} else if (delta > 0) {
+			this.speed /= 0.8;
+		}
 	}
 };
 

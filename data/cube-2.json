@@ -16,7 +16,10 @@
 		"COLOR_HUE_SCALE": -0.3813,
 		"COLOR_HUE_OFFSET": 0.3129,
 		"COLOR_SATURATION": 0.6,
-		"COLOR_VALUE": 0.8
+		"COLOR_VALUE": 0.8,
+		"CAMERA_TILT": 0,
+		"CAMERA_ZOOM": 1.5,
+		"NUM_ITERATIONS": 10
 	},
 	"camera": {
 		"position": {
@@ -30,8 +33,6 @@
 			"_z": 0,
 			"_order": "YXZ"
 		},
-		"speed": 1,
-		"tilt": 0,
-		"zoom": 1.5
+		"speed": 1
 	}
 }

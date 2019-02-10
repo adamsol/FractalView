@@ -22,6 +22,10 @@ input:not([type=checkbox]), select {
   box-sizing: border-box;
 }
 
+.inspector {
+  overflow-y: auto;
+}
+
 .panel {
   margin: 5px;
 }

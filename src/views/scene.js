@@ -63,7 +63,7 @@ SceneView.prototype.initShader = function(vertex, fragment, params)
 			cameraPos: {value: new THREE.Vector3()},
 			cameraDir: {value: new THREE.Vector3()},
 			cameraRight: {value: new THREE.Vector3()},
-			cameraZoom: {},
+			cameraSpeed: {},
 			frameBuffer: {value: this.frame.buffer1},
 			framesCount: {},
 		}, params),
@@ -96,8 +96,6 @@ SceneView.prototype.animate = function()
 			position: this.camera.position,
 			rotation: this.camera.rotation,
 			speed: this.controls.speed,
-			tilt: this.controls.tilt,
-			zoom: this.controls.zoom,
 		};
 
 		// When the camera is not moving, consecutive frames will be accumulated and blended together.
@@ -113,8 +111,8 @@ SceneView.prototype.animate = function()
 		let cameraRight = this.shader.uniforms.cameraRight.value;
 		this.camera.getWorldPosition(cameraPos);
 		this.camera.getWorldDirection(cameraDir);
-		cameraRight.copy(cameraDir).cross(THREE.Vector3.Y).applyAxisAngle(cameraDir, this.controls.tilt).normalize();
-		this.shader.uniforms.cameraZoom.value = this.controls.zoom;
+		cameraRight.copy(cameraDir).cross(THREE.Vector3.Y).normalize();
+		this.shader.uniforms.cameraSpeed.value = this.controls.speed;
 
 		this.shader.uniforms.framesCount.value = this.frame.count;
 		this.frame.count += 1;

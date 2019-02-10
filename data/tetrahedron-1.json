@@ -13,22 +13,26 @@
 		"COLOR_HUE_SCALE": 1.2,
 		"COLOR_HUE_OFFSET": 0.1,
 		"COLOR_SATURATION": 0.6,
-		"COLOR_VALUE": 0.7
+		"COLOR_VALUE": 0.7,
+		"CAMERA_TILT": 0,
+		"CAMERA_ZOOM": 1.5,
+		"NUM_ITERATIONS": 15,
+		"C_X": 1,
+		"C_Y": 1,
+		"C_Z": 1
 	},
 	"camera": {
 		"position": {
-			"x": 0,
-			"y": 0,
-			"z": 3
+			"x": 0.07093056725831422,
+			"y": -0.019701939426910356,
+			"z": 2.7598695548428585
 		},
 		"rotation": {
-			"_x": 0,
-			"_y": 0,
+			"_x": -0.07800000000000003,
+			"_y": -0.059999999999999956,
 			"_z": 0,
 			"_order": "YXZ"
 		},
-		"speed": 1,
-		"tilt": 0,
-		"zoom": 1.5
+		"speed": 1
 	}
 }

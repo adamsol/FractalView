@@ -2,6 +2,7 @@
 function InspectorView(container, state)
 {
 	this.container = container.getElement().empty();
+	this.container.addClass('inspector');
 
 	this.panel = {
 		selectors: $('<div class="panel"></div>').appendTo(this.container),
