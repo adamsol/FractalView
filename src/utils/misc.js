@@ -4,34 +4,6 @@ for (let c = 65; c <= 90; ++c) {
 	Keys[String.fromCharCode(c)] = c;
 }
 
-Array.prototype.extend = function(arr)
-{
-	arr.forEach(function(el) {
-		this.push(el);
-	}.bind(this));
-};
-
-Array.prototype.remove = function(el)
-{
-	let index = this.indexOf(el);
-	this.splice(index, 1);
-};
-
-Array.prototype.prop = function(prop)
-{
-	return this.map(function(obj) {
-		return obj[prop];
-	});
-};
-
-String.prototype.upper = String.prototype.toUpperCase;
-String.prototype.lower = String.prototype.toLowerCase;
-
-String.prototype.capitalize = function()
-{
-	return this[0].upper() + this.slice(1);
-};
-
 String.prototype.format = function()
 {
 	let args = arguments;
@@ -48,33 +20,6 @@ String.prototype.format = function()
 		}
 		return (obj !== undefined ? obj : match);
 	});
-};
-
-let _ = undefined;
-
-Function.prototype.curry = function()
-{
-	let f = this;
-	let org_args = [].slice.call(arguments);
-	return function() {
-		let args = org_args.slice();
-		let new_args = [].slice.call(arguments);
-		let i, j;
-		for (i = 0, j = 0; i < args.length && j < new_args.length; ++i) {
-			if (args[i] === _) {
-				args[i] = new_args[j++];
-			}
-		}
-		return f.apply(this, args.concat(new_args.slice(j)));
-	};
-};
-
-Function.prototype.lock = function(n)
-{
-	let f = this;
-	return function() {
-		return f.apply(this, [].slice.call(arguments, 0, n));
-	};
 };
 
 // Beware: they are mutable!
