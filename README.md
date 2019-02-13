@@ -45,7 +45,7 @@ To-Do
 Usage
 -----
 
-FractalView is written in Electron (Node.js), so NPM is required.
+FractalView is written in Electron (Node.js), so NPM (v6) is required.
 All packages (like Three.js) will be installed automatically.
 
 ```
