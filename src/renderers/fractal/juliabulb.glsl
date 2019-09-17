@@ -11,7 +11,7 @@ Distance Scene(vec3 p)
     vec3 z = p;
     vec3 c = vec3(C_X, C_Y, C_Z);
     vec3 d = vec3(1.0);
-    float r = 0.0;
+	float r = 0.0;
     float k = EXPONENT;
     float b = 10000.0;
 

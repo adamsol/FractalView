@@ -11,7 +11,7 @@ function createMainWindow()
 {
 	const state = electronWindowState({
 		defaultWidth: 1280,
-    	defaultHeight: 800,
+		defaultHeight: 800,
 	});
 
 	mainWindow = new electron.BrowserWindow({

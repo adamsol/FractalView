@@ -136,5 +136,5 @@ electron.ipcRenderer.on('saveImage', (event) => {
 });
 
 $(window).on('beforeunload', () => {
-    localStorage['layout_config'] = JSON.stringify(layout.toConfig());
+	localStorage['layout_config'] = JSON.stringify(layout.toConfig());
 });

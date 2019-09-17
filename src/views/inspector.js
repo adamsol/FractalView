@@ -94,9 +94,9 @@ InspectorView.prototype.updateParams = function(reset)
 		this.panel.params.empty();
 		for (let [name, param] of Object.entries(this.params)) {
 			let slider = $('<div class="param-slider"></div>').slider({
-			    value: param.value,
-			    min: param.min,
-			    max: param.max,
+				value: param.value,
+				min: param.min,
+				max: param.max,
 				step: param.type == 'int' ? 1 : 0.0001,
 				slide: (event, ui) => {
 					scene.params[name] = param.value = ui.value;
