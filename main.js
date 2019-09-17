@@ -1,4 +1,6 @@
 
+process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = true;
+
 const electron = require('electron');
 const electronWindowState = require('electron-window-state');
 
@@ -15,6 +17,9 @@ function createMainWindow()
 	});
 
 	mainWindow = new electron.BrowserWindow({
+		webPreferences: {
+			nodeIntegration: true,
+		},
 		x: state.x,
 		y: state.y,
 		width: state.width,

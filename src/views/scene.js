@@ -119,14 +119,17 @@ SceneView.prototype.animate = function()
 
 		// Render scene to buffer2.
 		this.frame.mesh.material = this.shader;
-		this.renderer.render(this.frame.scene, this.frame.camera, this.frame.buffer2);
+		this.renderer.setRenderTarget(this.frame.buffer2);
+		this.renderer.render(this.frame.scene, this.frame.camera);
 
 		// Render buffer2 to buffer1.
 		this.frame.mesh.material = this.frame.material;
-		this.renderer.render(this.frame.scene, this.frame.camera, this.frame.buffer1);
+		this.renderer.setRenderTarget(this.frame.buffer1);
+		this.renderer.render(this.frame.scene, this.frame.camera);
 
 		// Render to the screen.
 		this.frame.mesh.material = this.frame.material;
+		this.renderer.setRenderTarget(null);
 		this.renderer.render(this.frame.scene, this.frame.camera);
 	}
 
