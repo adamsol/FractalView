@@ -140,7 +140,7 @@ SceneView.prototype.animate = function()
 
 SceneView.prototype.getImage = function()
 {
-	// Screenshot has to made immediately after the scene is rendered, otherwise it will be black.
+	// Screenshot has to be taken immediately after the scene is rendered, otherwise it will be black.
 	// https://stackoverflow.com/questions/30628064/how-to-toggle-preservedrawingbuffer-in-three-js
 	this.animate();
 	let url = this.renderer.domElement.toDataURL('image/jpeg');

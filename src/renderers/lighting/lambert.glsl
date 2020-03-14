@@ -7,9 +7,9 @@ const vec3 LIGHT_DIR = normalize(vec3(0.3, 0.7, 0.5));
 vec3 Lighting(int i, vec3 p)
 {
 	Distance dist = Scene(p);
-    float eps = EPS * dist.value / CAMERA_ZOOM;
+	float eps = EPS * dist.value / CAMERA_ZOOM;
 
-    vec3 normal = Normal(p, eps);
+	vec3 normal = Normal(p, eps);
 
-    return vec3(max(dot(LIGHT_DIR, normal), 0.0) * 0.8 + 0.2);
+	return vec3(max(dot(LIGHT_DIR, normal), 0.0) * 0.8 + 0.2);
 }
