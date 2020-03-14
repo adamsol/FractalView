@@ -23,7 +23,7 @@ function loadFractal(file_path)
 			defaultPath: path.join(app.getAppPath(), 'data'),
 		};
 		dialog.showOpenDialog(data, files => {
-			if (!files) {
+			if (!files.length) {
 				return;
 			}
 			loadFractal(files[0]);
