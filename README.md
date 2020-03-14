@@ -24,7 +24,7 @@ Features
 
 * Ray tracing with distance estimation (a.k.a. ray marching or sphere tracing).
 * Progressive rendering for instantaneous preview and cost-free anti-aliasing and depth of field.
-* Formulas for well-known fractals, such as Mandelbulb and Sierpiński tetrahedron.
+* Formulas for well-known fractals: Mandelbulb, Juliabulb, Mandelbox, Kaleidoscopic IFS.
 * Several lighting methods, including path tracing with global illumination.
 * Coloring using orbit trap method.
 * Parameter values adjustable with sliders.
