@@ -35,8 +35,7 @@ To-Do
 
 * Better, deterministic lighting (shadows and ambient occlusion) without path tracing
   (which currently doesn't work well for fractal interiors).
-* Additional graphics effects: reflections, bloom, fog, etc.
-* New fractal formulas: Icosahedron, Mandelbox, Koch cube etc.
+* Additional graphics effects: reflections, bloom, fog, texturing, etc.
 * Support for custom scripts, especially for rendering standard geometry.
 * Double precision calculations (probably not possible without a huge performance drop;
   shame on you, video card manufacturers!).
