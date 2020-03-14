@@ -21,12 +21,12 @@
     "electron-window-state": "^5.0.3",
     "golden-layout": "^1.5.9",
     "jquery-ui-dist": "^1.12.1",
-    "three": "^0.108.0"
+    "three": "^0.114.0"
   },
   "devDependencies": {
-    "electron": "^6.0.9",
-    "electron-packager": "^14.0.6",
-    "xo": "^0.24.0"
+    "electron": "^6.1.9",
+    "electron-packager": "^14.2.1",
+    "xo": "^0.28.0"
   },
   "xo": {
     "envs": [
