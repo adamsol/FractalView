@@ -15,7 +15,6 @@ uniform float ROT2_Z;               // default: 0.0, min: -90.0, max: 90.0
 Distance Scene(vec3 p)
 {
 	vec3 z = p;
-	float scale = SCALE;
 	float b = 10000.0;
 	float t = 0.0;
 
@@ -28,19 +27,19 @@ Distance Scene(vec3 p)
 		z = rotateZ(z, ROT1_Z);
 
 		z = abs(z);
-		if (z.x - z.y < 0.0) { float x1 = z.y; z.y = z.x; z.x = x1; }
-		if (z.x - z.z < 0.0) { float x1 = z.z; z.z = z.x; z.x = x1; }
-		if (z.y - z.z < 0.0) { float y1 = z.z; z.z = z.y; z.y = y1; }
+		if (z.x - z.y < 0.0) { z.xy = z.yx; }
+		if (z.x - z.z < 0.0) { z.xz = z.zx; }
+		if (z.y - z.z < 0.0) { z.yz = z.zy; }
 
 		z = rotateX(z, ROT2_X);
 		z = rotateY(z, ROT2_Y);
 		z = rotateZ(z, ROT2_Z);
 
-		z.x = scale * z.x - (scale-1.0) * C_X;
-		z.y = scale * z.y - (scale-1.0) * C_Y;
-		z.z = scale * z.z;
-		if (z.z > (scale-1.0)*0.5 * C_Z) {
-			z.z -= (scale-1.0) * C_Z;
+		z.x = SCALE * z.x - (SCALE-1.0) * C_X;
+		z.y = SCALE * z.y - (SCALE-1.0) * C_Y;
+		z.z = SCALE * z.z;
+		if (z.z > (SCALE-1.0)*0.5 * C_Z) {
+			z.z -= (SCALE-1.0) * C_Z;
 		}
 
 		float m = dot(z, z);
@@ -51,5 +50,5 @@ Distance Scene(vec3 p)
 		}
 	}
 
-	return Color((length(z)-2.0) * pow(scale, -t), hsv2rgb(b*COLOR_HUE_SCALE*0.3+COLOR_HUE_OFFSET, COLOR_SATURATION, COLOR_VALUE));
+	return Color((length(z)-2.0) * pow(SCALE, -t), hsv2rgb(b*COLOR_HUE_SCALE*0.3+COLOR_HUE_OFFSET, COLOR_SATURATION, COLOR_VALUE));
 }

@@ -9,26 +9,24 @@ uniform float EXPONENT;             // default: 3.0, min: 1.0, max: 16.0
 Distance Scene(vec3 p)
 {
 	vec3 z = p;
-	vec3 c = vec3(C_X, C_Y, C_Z);
 	vec3 d = vec3(1.0);
 	float r = 0.0;
-	float k = EXPONENT;
 	float b = 10000.0;
 
 	for (int i = 0; i < 30; ++i) {
 		if (i == NUM_ITERATIONS) {
 			break;
 		}
-		d = k * pow(r, k-1.0) * d + 1.0;
+		d = EXPONENT * pow(r, EXPONENT-1.0) * d + 1.0;
 		if (r > 0.0) {
 			float phi = atan(z.z, z.x);
-			phi *= k;
+			phi *= EXPONENT;
 			float theta = acos(z.y/r);
-			theta *= k;
-			r = pow(r, k);
+			theta *= EXPONENT;
+			r = pow(r, EXPONENT);
 			z = vec3(cos(phi) * cos(theta), sin(theta), sin(phi) * cos(theta)) * r;
 		}
-		z += c;
+		z += vec3(C_X, C_Y, C_Z);
 
 		r = length(z);
 		b = min(r, b);
