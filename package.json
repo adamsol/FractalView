@@ -24,7 +24,7 @@
     "three": "^0.114.0"
   },
   "devDependencies": {
-    "electron": "^6.1.9",
+    "electron": "^11.5.0",
     "electron-packager": "^14.2.1",
     "xo": "^0.28.0"
   },
