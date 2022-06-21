@@ -2,7 +2,7 @@
 	"params": {
 		"fractal": "sierpinski-dodecahedron.glsl",
 		"CAMERA_BOKEH": 0,
-		"CAMERA_FOCUS": 3,
+		"CAMERA_FOCUS": 1,
 		"CAMERA_TILT": 0,
 		"CAMERA_ZOOM": 1.5,
 		"COLOR_HUE_SCALE": 0.9152,

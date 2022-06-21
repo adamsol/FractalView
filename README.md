@@ -3,7 +3,10 @@ FractalView
 
 ### 3D fractal renderer in GLSL. ###
 
-![image](img/roots.jpg)
+|                       |                        |
+|:---------------------:|:----------------------:|
+|  ![](img/roots.jpg)   |   ![](img/cube.jpg)    |
+| ![](img/starfish.jpg) | ![](img/microlife.jpg) |
 
 
 Motivation
@@ -53,6 +56,6 @@ npm start
 ```
 
 Try built-in fractals and play with their parameters or run some examples (`Ctrl`+`O`).
-Move camera with your mouse, use mouse wheel to control its speed (and focal distance).
+Move camera with your mouse and WASDQE keys, use mouse wheel to control its speed (and focal distance).
 
 Note that a fast, dedicated GPU is highly recommended, especially for path tracing.
